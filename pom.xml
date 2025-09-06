@@ -403,7 +403,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.ico</argument>
+                                        <argument>${project.build.directory}/img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -489,7 +489,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.ico</argument>
+                                        <argument>${project.build.directory}/img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -672,7 +672,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.ico</argument>
+                                        <argument>${project.build.directory}/img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -791,7 +791,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.ico</argument>
+                                        <argument>${project.build.directory}/img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -1064,7 +1064,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.ico</argument>
+                                        <argument>${project.build.directory}/img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -1173,7 +1173,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.ico</argument>
+                                        <argument>${project.build.directory}/img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -1302,7 +1302,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.ico</argument>
+                                        <argument>${project.build.directory}/img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
