@@ -1,7 +1,6 @@
 package com.group_finity.mascot;
 
 import java.awt.AWTException;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
@@ -39,6 +38,7 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
+import com.group_finity.mascot.animationeditor.AnimationEditor;
 import com.group_finity.mascot.license.LicenseManager;
 import com.group_finity.mascot.license.LicenseChecker;
 import com.group_finity.mascot.license.LicenseLevel;
@@ -1039,6 +1039,13 @@ public class Main {
                                 NativeFactory.getInstance().getEnvironment().refreshCache();
                         });
 
+                        // Animation Editor button
+                        final JButton btnAnimationEditor = new JButton(languageBundle.getString("AnimationEditor"));
+                        btnAnimationEditor.addActionListener(event1 -> {
+                            form.dispose();
+                            AnimationEditor.launch();
+                        });
+
                         final JButton btnLanguage = new JButton(languageBundle.getString("Language"));
                         btnLanguage.addMouseListener(new MouseListener() {
                             @Override
@@ -1174,6 +1181,8 @@ public class Main {
                         gridBag.gridy++;
                         panel.add(btnSettings, gridBag);
                         gridBag.gridy++;
+                        panel.add(btnAnimationEditor, gridBag);
+                        gridBag.gridy++;
                         panel.add(btnLanguage, gridBag);
                         gridBag.gridy++;
                         panel.add(btnAutoStart, gridBag);
@@ -1194,7 +1203,7 @@ public class Main {
                         // 自动调整窗口大小和位置
                         setupTrayMenuAutoSizing(form, panel, scaling, icon, event,
                             btnCallShimeji, btnFollowCursor, btnReduceToOne, btnRestoreWindows,
-                            btnAllowedBehaviours, btnChooseShimeji, btnSettings, btnLanguage,
+                            btnAllowedBehaviours, btnChooseShimeji, btnSettings, btnAnimationEditor, btnLanguage,
                             btnAutoStart, btnLicense, btnPauseAll, btnDismissAll);
                         form.setMinimumSize(form.getSize());
                     } else if (event.getButton() == MouseEvent.BUTTON1) {
