@@ -223,18 +223,18 @@
 
 		<Action Name="Bouncing" Type="Animate" BorderType="Floor">
 			<Animation>
-				<Pose Image="/BounceCompress.png" ImageAnchor="64,128" Velocity="0,0" Duration="4" />
 				<Pose Image="/BounceExtend.png" ImageAnchor="64,128" Velocity="0,0" Duration="4" />
+				<Pose Image="/BounceCompress.png" ImageAnchor="64,128" Velocity="0,0" Duration="4" />
 			</Animation>
 		</Action>
 
 		<Action Name="Tripping" Type="Animate" BorderType="Floor">
 			<Animation>
-				<Pose Image="/BounceExtend.png" ImageAnchor="64,128" Velocity="-8,0" Duration="8" />
-				<Pose Image="/BounceCompress.png" ImageAnchor="64,128" Velocity="-4,0" Duration="4" />
+				<Pose Image="/BounceCompress.png" ImageAnchor="64,128" Velocity="-8,0" Duration="8" />
+				<Pose Image="/BounceExtend.png" ImageAnchor="64,128" Velocity="-4,0" Duration="4" />
 				<Pose Image="/CreepContract.png" ImageAnchor="64,128" Velocity="-2,0" Duration="4" />
 				<Pose Image="/CreepContract.png" ImageAnchor="64,128" Velocity="0,0" Duration="10" />
-				<Pose Image="/BounceExtend.png" ImageAnchor="64,104" Velocity="-4,0" Duration="4" />
+				<Pose Image="/BounceCompress.png" ImageAnchor="64,104" Velocity="-4,0" Duration="4" />
 			</Animation>
 		</Action>
 
@@ -816,20 +816,20 @@
 		<!-- 主动抱抱动画 -->
 		<Action Name="HugAction" Type="Embedded" Class="com.group_finity.mascot.action.Interact" BorderType="Floor">
 			<Animation>
-				<Pose Image="/hug1.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
-				<Pose Image="/hug2.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
-				<Pose Image="/hug3.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
-				<Pose Image="/hug4.png" ImageAnchor="64,128" Velocity="0,0" Duration="50" />
-				<Pose Image="/hug3.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
-				<Pose Image="/hug2.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
-				<Pose Image="/hug1.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/Hug1.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/Hug2.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/Hug3.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/Hug4.png" ImageAnchor="64,128" Velocity="0,0" Duration="50" />
+				<Pose Image="/Hug3.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/Hug2.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
+				<Pose Image="/Hug1.png" ImageAnchor="64,128" Velocity="0,0" Duration="8" />
 			</Animation>
 		</Action>
 		
 		<!-- 被抱抱动画 -->
 		<Action Name="HuggedAction" Type="Embedded" Class="com.group_finity.mascot.action.Interact" BorderType="Floor">
 			<Animation>
-				<Pose Image="/hug4.png" ImageAnchor="64,128" Velocity="0,0" Duration="98" />
+				<Pose Image="/Hug4.png" ImageAnchor="64,128" Velocity="0,0" Duration="98" />
 			</Animation>
 		</Action>
 		
