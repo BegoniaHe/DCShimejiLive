@@ -682,6 +682,7 @@ public class Main {
         if (externalFile.exists()) {
             try (InputStream is = new FileInputStream(externalFile)) {
                 rawImage = ImageIO.read(is);
+                log.log(Level.INFO, "Successfully loaded external icon from: " + externalPath);
             } catch (IOException e) {
                 log.log(Level.WARNING, "Failed to load external icon from: " + externalPath, e);
             }
@@ -693,17 +694,13 @@ public class Main {
             if (resourceStream != null) {
                 try (InputStream is = resourceStream) {
                     rawImage = ImageIO.read(is);
+                    log.log(Level.INFO, "Successfully loaded resource icon from: " + iconPath);
                 } catch (IOException e) {
                     log.log(Level.WARNING, "Failed to load resource icon from: " + iconPath, e);
                 }
+            } else {
+                log.log(Level.WARNING, "Resource not found: " + iconPath);
             }
-        }
-        
-        // 如果ICO加载失败，尝试加载PNG版本
-        if (rawImage == null && iconPath.endsWith(".ico")) {
-            String pngPath = iconPath.replace(".ico", ".png");
-            log.log(Level.INFO, "ICO failed, trying PNG: " + pngPath);
-            return loadIconImage(pngPath);
         }
         
         // 如果成功加载了图像，进行系统托盘优化处理
@@ -801,7 +798,19 @@ public class Main {
         } catch (final Exception e) {
             log.log(Level.WARNING, "Failed to load ICO, trying PNG fallback", e);
         }
-        
+
+        // 尝试PNG后备方案
+        if (image == null) {
+            try {
+                image = loadIconImage("/icon.png");
+                if (image != null) {
+                    log.log(Level.INFO, "Successfully loaded PNG tray icon");
+                }
+            } catch (final Exception e) {
+                log.log(Level.WARNING, "Failed to load PNG fallback", e);
+            }
+        }
+
         // 最后的fallback：创建一个简单的默认图标
         if (image == null) {
             log.log(Level.WARNING, "Creating default tray icon");
