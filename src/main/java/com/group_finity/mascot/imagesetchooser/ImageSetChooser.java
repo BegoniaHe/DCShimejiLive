@@ -40,7 +40,7 @@ public class ImageSetChooser extends javax.swing.JDialog
         Image icon = null;
         try
         {
-            icon = new ImageIcon("./img/icon.png").getImage();
+            icon = new ImageIcon("./img/icon.ico").getImage();
         }
         catch (final Exception e)
         {

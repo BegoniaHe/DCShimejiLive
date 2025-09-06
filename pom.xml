@@ -119,7 +119,7 @@
                 <targetPath>.</targetPath>
                 <filtering>false</filtering>
                 <includes>
-                    <!-- 只包含核心配置文件，不包含用户可修改的配置 -->
+                    <!-- 只包含核心配置文件，不包含用户可修改的配�?-->
                     <include>logging.properties</include>
                     <include>language*.properties</include>
                     <include>schema*.properties</include>
@@ -177,7 +177,7 @@
                         <manifestEntries>
                             <!-- JDK 21+ 原生访问权限 -->
                             <Enable-Native-Access>ALL-UNNAMED</Enable-Native-Access>
-                            <!-- 添加模块开放权限 -->
+                            <!-- 添加模块开放权�?-->
                             <Add-Opens>java.base/java.lang java.desktop/sun.awt java.desktop/java.awt</Add-Opens>
                             <!-- 指定外部资源路径 -->
                             <Class-Path>. conf/ img/</Class-Path>
@@ -225,7 +225,31 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.1</version>
                 <executions>
-                    <!-- 复制配置文件到target根目录 -->
+                    <!-- 编译前复制必要配置文件到src/main/resources -->
+                    <execution>
+                        <id>copy-essential-conf-to-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.basedir}/src/main/resources</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>conf</directory>
+                                    <filtering>false</filtering>
+                                    <includes>
+                                        <!-- 只包含核心配置文件，不包含用户可修改的配置 -->
+                                        <include>logging.properties</include>
+                                        <include>language*.properties</include>
+                                        <include>schema*.properties</include>
+                                        <include>Mascot.xsd</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <!-- 复制配置文件到target根目�?-->
                     <execution>
                         <id>copy-conf-to-target</id>
                         <phase>package</phase>
@@ -241,7 +265,7 @@
                             </resources>
                         </configuration>
                     </execution>
-                    <!-- 复制图片文件到target根目录 -->
+                    <!-- 复制图片文件到target根目录?-->
                     <execution>
                         <id>copy-img-to-target</id>
                         <phase>package</phase>
@@ -306,7 +330,7 @@
                         <artifactId>maven-resources-plugin</artifactId>
                         <version>3.3.1</version>
                         <executions>
-                            <!-- 准备便携版输入目录 -->
+                            <!-- 准备便携版输入目�?-->
                             <execution>
                                 <id>prepare-portable-input</id>
                                 <phase>package</phase>
@@ -541,7 +565,7 @@
                                     </arguments>
                                 </configuration>
                             </execution>
-                            <!-- 移动MSI文件到target根目录 -->
+                            <!-- 移动MSI文件到target根目�?-->
                             <execution>
                                 <id>move-msi-to-target</id>
                                 <phase>install</phase>
@@ -648,7 +672,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.png</argument>
+                                        <argument>../../img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -767,7 +791,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.png</argument>
+                                        <argument>../../img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -871,7 +895,7 @@
                                     </arguments>
                                 </configuration>
                             </execution>
-                            <!-- 移动DMG文件到target根目录 -->
+                            <!-- 移动DMG文件到target根目�?-->
                             <execution>
                                 <id>move-dmg-to-target</id>
                                 <phase>install</phase>
@@ -927,7 +951,7 @@
                         <artifactId>maven-resources-plugin</artifactId>
                         <version>3.3.1</version>
                         <executions>
-                            <!-- 准备便携版输入目录 -->
+                            <!-- 准备便携版输入目�?-->
                             <execution>
                                 <id>prepare-portable-input</id>
                                 <phase>package</phase>
@@ -1040,7 +1064,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.png</argument>
+                                        <argument>../../img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -1149,7 +1173,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.png</argument>
+                                        <argument>../../img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -1217,7 +1241,7 @@
                                     </arguments>
                                 </configuration>
                             </execution>
-                            <!-- 创建DEB安装包 -->
+                            <!-- 创建DEB安装�?-->
                             <execution>
                                 <id>jpackage-create-deb</id>
                                 <phase>install</phase>
@@ -1278,7 +1302,7 @@
                                         <argument>--vendor</argument>
                                         <argument>Shimeji-ee Group</argument>
                                         <argument>--icon</argument>
-                                        <argument>../../img/icon.png</argument>
+                                        <argument>../../img/icon.ico</argument>
                                         <argument>--type</argument>
                                         <argument>app-image</argument>
                                         <argument>--dest</argument>
@@ -1346,7 +1370,7 @@
                                     </arguments>
                                 </configuration>
                             </execution>
-                            <!-- 创建RPM安装包 -->
+                            <!-- 创建RPM安装�?-->
                             <execution>
                                 <id>jpackage-create-rpm</id>
                                 <phase>install</phase>
@@ -1381,7 +1405,7 @@
                                     </arguments>
                                 </configuration>
                             </execution>
-                            <!-- 移动DEB文件到target根目录 -->
+                            <!-- 移动DEB文件到target根目�?-->
                             <execution>
                                 <id>move-deb-to-target</id>
                                 <phase>install</phase>
@@ -1397,7 +1421,7 @@
                                     </arguments>
                                 </configuration>
                             </execution>
-                            <!-- 移动RPM文件到target根目录 -->
+                            <!-- 移动RPM文件到target根目�?-->
                             <execution>
                                 <id>move-rpm-to-target</id>
                                 <phase>install</phase>
