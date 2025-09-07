@@ -261,6 +261,14 @@ jobs:
           # Set MVND_HOME environment variable
           echo "MVND_HOME=/opt/mvnd" >> $GITHUB_ENV
           echo "/opt/mvnd/bin" >> $GITHUB_PATH
+          # Configure mvnd for CI environment
+          mkdir -p ~/.m2/mvnd/1.0.2
+          cat > ~/.m2/mvnd/1.0.2/mvnd.properties << EOF
+          mvnd.idleTimeout=30m
+          mvnd.maxLostKeepAlive=10
+          mvnd.socketFamily=inet
+          mvnd.debug=false
+          EOF
           # Test mvnd installation
           /opt/mvnd/bin/mvnd --version
 
@@ -274,7 +282,7 @@ jobs:
       - name: Build macOS ARM64 packages with mvnd
         run: |
           # Build using mvnd with jpackage-mac profile
-          /opt/mvnd/bin/mvnd -P jpackage-mac install
+          /opt/mvnd/bin/mvnd -P jpackage-mac install -B -V -Dmvnd.idleTimeout=30m -Dmvnd.keepAlive=30s -Dmvnd.maxLostKeepAlive=10
 
       - name: Upload macOS ARM64 DMG installer
         uses: actions/upload-artifact@v4
