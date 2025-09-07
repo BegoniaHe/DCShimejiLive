@@ -923,7 +923,7 @@
                                     </arguments>
                                 </configuration>
                             </execution>
-                            <!-- 移动DMG文件到target根目�?-->
+                            <!-- 移动DMG文件到target根目录?-->
                             <execution>
                                 <id>move-dmg-to-target</id>
                                 <phase>install</phase>
@@ -935,8 +935,7 @@
                                     <workingDirectory>${project.build.directory}</workingDirectory>
                                     <arguments>
                                         <argument>-c</argument>
-                                        <argument>find jpackage-macos-dmg -name "*.dmg" -exec mv {}
-                                            . \;</argument>
+                                        <argument>find jpackage-macos-dmg -name "*.dmg" -exec mv {} . \;</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -1442,8 +1441,7 @@
                                     <workingDirectory>${project.build.directory}</workingDirectory>
                                     <arguments>
                                         <argument>-c</argument>
-                                        <argument>find jpackage-linux-deb -name "*.deb" -exec mv {}
-                                            . \;</argument>
+                                        <argument>find jpackage-linux-deb -name "*.deb" -exec mv {} . \;</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -1459,8 +1457,7 @@
                                     <workingDirectory>${project.build.directory}</workingDirectory>
                                     <arguments>
                                         <argument>-c</argument>
-                                        <argument>find jpackage-linux-rpm -name "*.rpm" -exec mv {}
-                                            . \;</argument>
+                                        <argument>find jpackage-linux-rpm -name "*.rpm" -exec mv {} . \;</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
