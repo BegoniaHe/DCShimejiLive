@@ -51,8 +51,11 @@ public class PoseDetailsPanel extends JPanel {
         
         imageAnchorField = new JTextField();
         imageAnchorField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        imageAnchorField.setToolTipText("Format: x,y (e.g., 64,128) - defines the anchor point of the image");
+        
         velocityField = new JTextField();
         velocityField.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
+        velocityField.setToolTipText("Format: x,y (e.g., 5,0) - defines the movement velocity in pixels");
         
         durationSpinner = new JSpinner(new SpinnerNumberModel(1, 1, 10000, 1));
         durationSpinner.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 15));
@@ -145,11 +148,41 @@ public class PoseDetailsPanel extends JPanel {
     }
     
     private void setupEventHandlers() {
+        // Add both ActionListener and FocusListener for immediate updates
         imageField.addActionListener(e -> updatePoseFromUI());
+        imageField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                updatePoseFromUI();
+            }
+        });
+        
         imageAnchorField.addActionListener(e -> updatePoseFromUI());
+        imageAnchorField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                updatePoseFromUI();
+            }
+        });
+        
         velocityField.addActionListener(e -> updatePoseFromUI());
+        velocityField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                updatePoseFromUI();
+            }
+        });
+        
         durationSpinner.addChangeListener(e -> updatePoseFromUI());
+        
         soundField.addActionListener(e -> updatePoseFromUI());
+        soundField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                updatePoseFromUI();
+            }
+        });
+        
         volumeSlider.addChangeListener(e -> updatePoseFromUI());
         
         browseImageButton.addActionListener(e -> browseForImage());
@@ -194,17 +227,73 @@ public class PoseDetailsPanel extends JPanel {
     private void updatePoseFromUI() {
         if (currentPose == null) return;
         
-        currentPose.setImage(imageField.getText());
-        currentPose.setImageAnchor(imageAnchorField.getText());
-        currentPose.setVelocity(velocityField.getText());
+        // Update image path
+        currentPose.setImage(imageField.getText().trim());
+        
+        // Validate and update image anchor (should be "x,y" format)
+        String anchorText = imageAnchorField.getText().trim();
+        if (anchorText.isEmpty()) {
+            currentPose.setImageAnchor("0,0"); // Default value
+        } else if (isValidCoordinate(anchorText)) {
+            currentPose.setImageAnchor(anchorText);
+        } else {
+            // Reset to previous valid value or default
+            imageAnchorField.setText(currentPose.getImageAnchor() != null ? currentPose.getImageAnchor() : "0,0");
+            showValidationMessage("Image Anchor should be in format 'x,y' (e.g., '64,128')");
+            return;
+        }
+        
+        // Validate and update velocity (should be "x,y" format)
+        String velocityText = velocityField.getText().trim();
+        if (velocityText.isEmpty()) {
+            currentPose.setVelocity("0,0"); // Default value
+        } else if (isValidCoordinate(velocityText)) {
+            currentPose.setVelocity(velocityText);
+        } else {
+            // Reset to previous valid value or default
+            velocityField.setText(currentPose.getVelocity() != null ? currentPose.getVelocity() : "0,0");
+            showValidationMessage("Velocity should be in format 'x,y' (e.g., '5,0')");
+            return;
+        }
+        
+        // Update other fields
         currentPose.setDuration((Integer) durationSpinner.getValue());
-        currentPose.setSound(soundField.getText());
+        currentPose.setSound(soundField.getText().trim());
         currentPose.setVolume(volumeSlider.getValue() / 100.0);
         
         // Notify change listeners
         for (Runnable listener : changeListeners) {
             listener.run();
         }
+    }
+    
+    /**
+     * Validate coordinate format (x,y where x and y are numbers)
+     */
+    private boolean isValidCoordinate(String coordinate) {
+        if (coordinate == null || coordinate.trim().isEmpty()) {
+            return true; // Empty is valid, will use default
+        }
+        
+        String[] parts = coordinate.split(",");
+        if (parts.length != 2) {
+            return false;
+        }
+        
+        try {
+            Double.parseDouble(parts[0].trim());
+            Double.parseDouble(parts[1].trim());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+    
+    /**
+     * Show validation message to user
+     */
+    private void showValidationMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Input Validation", JOptionPane.WARNING_MESSAGE);
     }
     
     private void browseForImage() {

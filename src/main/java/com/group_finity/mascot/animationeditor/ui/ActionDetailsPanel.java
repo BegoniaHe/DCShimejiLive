@@ -23,6 +23,9 @@ public class ActionDetailsPanel extends JPanel {
     // Current project directory for file operations
     private File currentProjectDirectory;
     
+    // Change listeners for notifying parent components about modifications
+    private java.util.List<Runnable> changeListeners = new java.util.ArrayList<>();
+    
     // Action basic info components
     private JTextField nameField;
     private JComboBox<String> typeComboBox;
@@ -193,10 +196,25 @@ public class ActionDetailsPanel extends JPanel {
     }
     
     private void setupEventHandlers() {
-        // Text field listeners
+        // Text field listeners - add both ActionListener and FocusListener for real-time updates
         nameField.addActionListener(e -> updateActionFromUI());
+        nameField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                updateActionFromUI();
+            }
+        });
+        
         typeComboBox.addActionListener(e -> updateActionFromUI());
+        
         classField.addActionListener(e -> updateActionFromUI());
+        classField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                updateActionFromUI();
+            }
+        });
+        
         borderTypeComboBox.addActionListener(e -> updateActionFromUI());
         
         // Poses list selection
@@ -218,6 +236,8 @@ public class ActionDetailsPanel extends JPanel {
         poseDetailsPanel.addChangeListener(() -> {
             // Refresh the pose list to show updated names
             posesList.repaint();
+            // Notify that the action has been modified through pose changes
+            notifyChangeListeners();
         });
     }
     
@@ -273,6 +293,9 @@ public class ActionDetailsPanel extends JPanel {
         currentAction.setType((String) typeComboBox.getSelectedItem());
         currentAction.setClassName(classField.getText());
         currentAction.setBorderType((String) borderTypeComboBox.getSelectedItem());
+        
+        // Notify listeners that the action has been modified
+        notifyChangeListeners();
     }
     
     private void addNewPose() {
@@ -289,6 +312,9 @@ public class ActionDetailsPanel extends JPanel {
         
         // Select the new pose
         posesList.setSelectedValue(newPose, true);
+        
+        // Notify listeners that the action has been modified
+        notifyChangeListeners();
     }
     
     private void removeSelectedPose() {
@@ -297,6 +323,9 @@ public class ActionDetailsPanel extends JPanel {
             currentAction.removePose(selectedPose);
             posesListModel.removeElement(selectedPose);
             poseDetailsPanel.setPose(null);
+            
+            // Notify listeners that the action has been modified
+            notifyChangeListeners();
         }
     }
     
@@ -310,6 +339,9 @@ public class ActionDetailsPanel extends JPanel {
             // Update the action's poses list as well
             currentAction.getPoses().remove(selectedIndex);
             currentAction.getPoses().add(selectedIndex - 1, pose);
+            
+            // Notify listeners that the action has been modified
+            notifyChangeListeners();
         }
     }
     
@@ -323,6 +355,9 @@ public class ActionDetailsPanel extends JPanel {
             // Update the action's poses list as well
             currentAction.getPoses().remove(selectedIndex);
             currentAction.getPoses().add(selectedIndex + 1, pose);
+            
+            // Notify listeners that the action has been modified
+            notifyChangeListeners();
         }
     }
     
@@ -376,6 +411,29 @@ public class ActionDetailsPanel extends JPanel {
             }
             
             return this;
+        }
+    }
+    
+    /**
+     * Add a change listener that will be notified when action data is modified
+     */
+    public void addChangeListener(Runnable listener) {
+        changeListeners.add(listener);
+    }
+    
+    /**
+     * Remove a change listener
+     */
+    public void removeChangeListener(Runnable listener) {
+        changeListeners.remove(listener);
+    }
+    
+    /**
+     * Notify all change listeners that the action has been modified
+     */
+    private void notifyChangeListeners() {
+        for (Runnable listener : changeListeners) {
+            listener.run();
         }
     }
 }

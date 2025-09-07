@@ -146,11 +146,11 @@ public class EditorMainWindow extends JFrame {
         toolbarPanel.add(currentDirectoryLabel, BorderLayout.CENTER);
         toolbarPanel.add(browseButton, BorderLayout.EAST);
         
-        // Image grid panel with 2-3 images per row
+        // Image grid panel with 3 images per row (larger panels)
         imageGridPanel = new JPanel();
-        imageGridPanel.setLayout(new GridLayout(0, 3, 10, 10)); // 3 columns, flexible rows
-        imageGridPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        imageGridPanel.setBackground(Color.WHITE);
+        imageGridPanel.setLayout(new GridLayout(0, 3, 15, 15)); // 3 columns, 15px spacing
+        imageGridPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        imageGridPanel.setBackground(new Color(248, 249, 250)); // Light background
         
         imageScrollPane = new JScrollPane(imageGridPanel);
         imageScrollPane.setBorder(BorderFactory.createTitledBorder(
@@ -380,76 +380,24 @@ public class EditorMainWindow extends JFrame {
     }
     
     private void addImageToGrid(File imageFile) {
-        JPanel imagePanel = new JPanel(new BorderLayout());
-        imagePanel.setBorder(BorderFactory.createRaisedBevelBorder());
-        imagePanel.setPreferredSize(new Dimension(150, 120));
-        imagePanel.setBackground(Color.WHITE);
-        
-        // Image preview
-        JLabel imageLabel = new JLabel();
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        imageLabel.setVerticalAlignment(SwingConstants.CENTER);
-        
-        try {
-            java.awt.image.BufferedImage image = javax.imageio.ImageIO.read(imageFile);
-            if (image != null) {
-                // Scale image to fit preview (100x80)
-                Image scaledImage = image.getScaledInstance(100, 80, Image.SCALE_SMOOTH);
-                imageLabel.setIcon(new ImageIcon(scaledImage));
-            } else {
-                imageLabel.setText("无法预览 / Can't preview");
-                imageLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
-            }
-        } catch (Exception e) {
-            imageLabel.setText("加载失败 / Load failed");
-            imageLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 10));
-        }
-        
-        // File name label
-        JLabel nameLabel = new JLabel(imageFile.getName());
-        nameLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 11));
-        nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        nameLabel.setToolTipText(imageFile.getName());
-        
-        // Truncate long names
-        if (imageFile.getName().length() > 15) {
-            String shortName = imageFile.getName().substring(0, 12) + "...";
-            nameLabel.setText(shortName);
-        }
-        
-        imagePanel.add(imageLabel, BorderLayout.CENTER);
-        imagePanel.add(nameLabel, BorderLayout.SOUTH);
-        
-        // Click handling
-        java.awt.event.MouseAdapter clickHandler = new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                // Single click - select
+        // Create image panel using the optimized renderer
+        JPanel imagePanel = ImageGridPanelRenderer.createImagePanel(imageFile, 
+            () -> {
                 updateStatusMessage("选择了图片: " + imageFile.getName() + " / Selected image: " + imageFile.getName());
-                
-                // Double click - set in pose
-                if (evt.getClickCount() == 2 && selectedAction != null) {
+                // Highlight this panel among all grid panels
+                for (Component comp : imageGridPanel.getComponents()) {
+                    if (comp instanceof JPanel) {
+                        comp.setBackground(Color.WHITE);
+                        ((JPanel) comp).setBorder(BorderFactory.createRaisedBevelBorder());
+                    }
+                }
+            }, 
+            () -> {
+                if (selectedAction != null) {
                     actionDetailsPanel.setImageForSelectedPose("/" + imageFile.getName());
                     updateStatusMessage("设置图片: " + imageFile.getName() + " / Set image: " + imageFile.getName());
                 }
-            }
-            
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                imagePanel.setBackground(new Color(230, 240, 255));
-                imagePanel.setBorder(BorderFactory.createLoweredBevelBorder());
-            }
-            
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                imagePanel.setBackground(Color.WHITE);
-                imagePanel.setBorder(BorderFactory.createRaisedBevelBorder());
-            }
-        };
-        
-        imagePanel.addMouseListener(clickHandler);
-        imageLabel.addMouseListener(clickHandler);
-        nameLabel.addMouseListener(clickHandler);
+            });
         
         imageGridPanel.add(imagePanel);
     }

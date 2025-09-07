@@ -45,8 +45,8 @@ public class MainEditorWindow extends JFrame {
     
     // Center Bottom Panel Components (File Browser)
     private JPanel centerBottomPanel;
-    private JList<File> imageList;
-    private DefaultListModel<File> imageListModel;
+    private JPanel imageGridPanel;
+    private JScrollPane imageScrollPane;
     
     // Right Panel Components (Action Details)
     private JPanel rightPanel;
@@ -57,6 +57,10 @@ public class MainEditorWindow extends JFrame {
     private AnimationAction selectedAction;
     private int currentProjectIndex = 0; // Track current project index
     private List<File> availableProjects; // Store all available projects
+    private boolean projectModified = false; // Track if project has unsaved changes
+    
+    // Status bar
+    private JLabel statusLabel;
     
     public MainEditorWindow() {
         // Initialize language bundle
@@ -115,24 +119,26 @@ public class MainEditorWindow extends JFrame {
     private void createCenterBottomPanel() {
         centerBottomPanel = new JPanel(new BorderLayout());
         centerBottomPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-        
-        // Image list
-        imageListModel = new DefaultListModel<>();
-        imageList = new JList<>(imageListModel);
-        imageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        imageList.setCellRenderer(new ImageListCellRenderer());
-        
-        JScrollPane imageScrollPane = new JScrollPane(imageList);
+
+        // Image grid panel with 3 images per row (larger panels)
+        imageGridPanel = new JPanel();
+        imageGridPanel.setLayout(new GridLayout(0, 3, 15, 15)); // 3 columns, 15px spacing
+        imageGridPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+        imageGridPanel.setBackground(new Color(248, 249, 250)); // Light background
+
+        imageScrollPane = new JScrollPane(imageGridPanel);
         imageScrollPane.setBorder(BorderFactory.createTitledBorder(languageBundle.getString("editor.images.title")));
-        
+        imageScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+
         centerBottomPanel.add(imageScrollPane, BorderLayout.CENTER);
-    }
-    
-    private void createRightPanel() {
+    }    private void createRightPanel() {
         rightPanel = new JPanel(new BorderLayout());
         rightPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         
         actionDetailsPanel = new ActionDetailsPanel();
+        
+        // Add change listener to track modifications
+        actionDetailsPanel.addChangeListener(() -> markProjectAsModified());
         
         JScrollPane rightScrollPane = new JScrollPane(actionDetailsPanel);
         rightScrollPane.setBorder(BorderFactory.createTitledBorder(languageBundle.getString("editor.details.title")));
@@ -164,6 +170,9 @@ public class MainEditorWindow extends JFrame {
         mainSplitPane.setDividerLocation(350);
         
         add(mainSplitPane, BorderLayout.CENTER);
+        
+        // Status bar
+        createStatusBar();
         
         // Menu bar
         createMenuBar();
@@ -230,17 +239,6 @@ public class MainEditorWindow extends JFrame {
                 selectAction((AnimationAction) userObject);
             }
         });
-        
-        // Image list selection
-        imageList.addListSelectionListener(e -> {
-            if (!e.getValueIsAdjusting()) {
-                File selectedImage = imageList.getSelectedValue();
-                if (selectedImage != null && selectedAction != null) {
-                    // Handle image selection for action editing
-                    // This could set the image for a pose, etc.
-                }
-            }
-        });
     }
     
     private void loadProjects() {
@@ -301,22 +299,20 @@ public class MainEditorWindow extends JFrame {
             // Update current project reference
             this.currentProject = project;
             
+            // Reset modification status when loading a project
+            projectModified = false;
+            
             // Update project directory for all panels
             updateProjectDirectoryForAllPanels();
             
             // Update window title to show current project
-            updateWindowTitle(project.getName());
+            updateWindowTitle();
+            updateStatusLabel("Project loaded: " + project.getName());
             
         } catch (Exception e) {
             log.log(Level.SEVERE, "Failed to load project: " + projectDir.getName(), e);
+            updateStatusLabel("Failed to load project: " + projectDir.getName());
         }
-    }
-    
-    private void updateWindowTitle(String projectName) {
-        String baseTitle = languageBundle.getString("editor.title");
-        String projectInfo = String.format(" - %s (%d/%d)", 
-            projectName, currentProjectIndex + 1, availableProjects.size());
-        setTitle(baseTitle + projectInfo);
     }
     
     private void switchToNextProject() {
@@ -384,18 +380,20 @@ public class MainEditorWindow extends JFrame {
         // Set project directory for all panels
         updateProjectDirectoryForAllPanels();
         
-        // Load images
-        imageListModel.clear();
+        // Load images into grid
+        imageGridPanel.removeAll();
         List<File> imageFiles = ProjectScanner.scanImageFiles(project.getRootDirectory());
         for (File imageFile : imageFiles) {
-            imageListModel.addElement(imageFile);
+            addImageToGrid(imageFile);
         }
+        imageGridPanel.revalidate();
+        imageGridPanel.repaint();
         
         // Clear action selection and preview to avoid showing previous project data
         clearPreview();
         
         // Update window title
-        updateWindowTitle(project.getName());
+        updateWindowTitle();
     }
     
     private void selectAction(AnimationAction action) {
@@ -441,6 +439,7 @@ public class MainEditorWindow extends JFrame {
             JOptionPane.showMessageDialog(this, 
                 languageBundle.getString("editor.success.projectSaved"),
                 languageBundle.getString("editor.success.saveTitle"), JOptionPane.INFORMATION_MESSAGE);
+            markProjectAsSaved(); // Mark project as saved
         } else {
             JOptionPane.showMessageDialog(this, 
                 languageBundle.getString("editor.error.saveFailed"),
@@ -466,6 +465,7 @@ public class MainEditorWindow extends JFrame {
             
             // Refresh tree
             loadProjects();
+            markProjectAsModified(); // Mark project as modified
         }
     }
     
@@ -485,6 +485,90 @@ public class MainEditorWindow extends JFrame {
             currentProject.getActions().remove(selectedAction);
             selectAction(null);
             loadProjects();
+            markProjectAsModified(); // Mark project as modified
         }
+    }
+    
+    private void createStatusBar() {
+        statusLabel = new JLabel("Ready");
+        statusLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        statusLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
+        
+        JPanel statusPanel = new JPanel(new BorderLayout());
+        statusPanel.setBorder(BorderFactory.createEtchedBorder());
+        statusPanel.add(statusLabel, BorderLayout.WEST);
+        
+        add(statusPanel, BorderLayout.SOUTH);
+    }
+    
+    /**
+     * Mark the project as modified and update UI accordingly
+     */
+    private void markProjectAsModified() {
+        if (!projectModified) {
+            projectModified = true;
+            updateWindowTitle();
+            updateStatusLabel("Project modified - remember to save changes");
+        }
+    }
+    
+    /**
+     * Mark the project as saved and update UI accordingly
+     */
+    private void markProjectAsSaved() {
+        if (projectModified) {
+            projectModified = false;
+            updateWindowTitle();
+            updateStatusLabel("Project saved successfully");
+        }
+    }
+    
+    /**
+     * Update the window title to show project name and modified status
+     */
+    private void updateWindowTitle() {
+        String title = languageBundle.getString("editor.title");
+        if (currentProject != null) {
+            title += " - " + currentProject.getName();
+            if (projectModified) {
+                title += " *";
+            }
+        }
+        setTitle(title);
+    }
+    
+    /**
+     * Update the status label with a message
+     */
+    private void updateStatusLabel(String message) {
+        if (statusLabel != null) {
+            statusLabel.setText(message);
+        }
+    }
+    
+    /**
+     * Add an image to the grid panel with preview
+     */
+    private void addImageToGrid(File imageFile) {
+        // Create image panel using the renderer
+        JPanel imagePanel = ImageGridPanelRenderer.createImagePanel(imageFile, 
+            () -> {
+                updateStatusLabel("选择了图片: " + imageFile.getName() + " / Selected image: " + imageFile.getName());
+                // Remove highlight from all panels first
+                for (Component comp : imageGridPanel.getComponents()) {
+                    if (comp instanceof JPanel) {
+                        comp.setBackground(Color.WHITE);
+                        ((JPanel) comp).setBorder(BorderFactory.createRaisedBevelBorder());
+                    }
+                }
+            }, 
+            () -> {
+                if (selectedAction != null) {
+                    actionDetailsPanel.setImageForSelectedPose(imageFile.getAbsolutePath());
+                    updateStatusLabel("设置图片到选中姿势: " + imageFile.getName() + " / Set image to selected pose: " + imageFile.getName());
+                }
+            });
+        
+        imageGridPanel.add(imagePanel);
     }
 }

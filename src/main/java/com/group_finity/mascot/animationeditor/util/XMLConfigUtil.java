@@ -12,6 +12,7 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -19,13 +20,19 @@ import java.util.logging.Level;
  * XML配置文件工具类
  * XML Configuration File Utility
  * 
+ * 保持原始XML文件结构完整性，只更新指定的Action元素
+ * 
  * @author DCShimeji Team
  */
 public class XMLConfigUtil {
     private static final Logger log = Logger.getLogger(XMLConfigUtil.class.getName());
     
+    // 缓存原始DOM文档，用于保持结构完整
+    private static Document originalDocument;
+    
     /**
      * 从XML文件加载动作配置
+     * 同时缓存原始文档结构
      */
     public static List<AnimationAction> loadActionsFromXML(File xmlFile) {
         List<AnimationAction> actions = new ArrayList<>();
@@ -36,16 +43,24 @@ public class XMLConfigUtil {
         }
         
         try {
+            // 缓存原始文档
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
             DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.parse(xmlFile);
+            originalDocument = builder.parse(xmlFile);
             
-            NodeList actionNodes = doc.getElementsByTagName("Action");
+            // 只解析包含Animation和Pose的Action（可以编辑的）
+            NodeList actionNodes = originalDocument.getElementsByTagName("Action");
             for (int i = 0; i < actionNodes.getLength(); i++) {
                 Element actionElement = (Element) actionNodes.item(i);
-                AnimationAction action = parseActionElement(actionElement);
-                if (action != null) {
-                    actions.add(action);
+                
+                // 只加载包含Animation子元素的Action（其他的保持原样）
+                NodeList animationNodes = actionElement.getElementsByTagName("Animation");
+                if (animationNodes.getLength() > 0) {
+                    AnimationAction action = parseActionElement(actionElement);
+                    if (action != null) {
+                        actions.add(action);
+                    }
                 }
             }
             
@@ -68,14 +83,18 @@ public class XMLConfigUtil {
             action.setClassName(actionElement.getAttribute("Class"));
             action.setBorderType(actionElement.getAttribute("BorderType"));
             
-            // 解析其他属性
+            // 解析所有属性，包括基本属性和扩展属性
             NamedNodeMap attributes = actionElement.getAttributes();
             for (int i = 0; i < attributes.getLength(); i++) {
                 Node attr = attributes.item(i);
-                action.setAttribute(attr.getNodeName(), attr.getNodeValue());
+                String attrName = attr.getNodeName();
+                String attrValue = attr.getNodeValue();
+                
+                // 存储所有属性，包括基本属性（用于完整保存）
+                action.setAttribute(attrName, attrValue);
             }
             
-            // 解析Animation和Pose元素
+            // 解析Animation和Pose元素（如果存在）
             NodeList animationNodes = actionElement.getElementsByTagName("Animation");
             if (animationNodes.getLength() > 0) {
                 Element animationElement = (Element) animationNodes.item(0);
@@ -129,35 +148,31 @@ public class XMLConfigUtil {
     
     /**
      * 保存动作配置到XML文件
+     * 只更新修改过的Action，保持其他结构不变
      */
     public static boolean saveActionsToXML(List<AnimationAction> actions, File xmlFile) {
         try {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
-            Document doc = builder.newDocument();
-            
-            // 创建根元素
-            Element root = doc.createElement("Mascot");
-            root.setAttribute("xmlns", "http://www.group-finity.com/Mascot");
-            doc.appendChild(root);
-            
-            // 创建ActionList元素
-            Element actionList = doc.createElement("ActionList");
-            root.appendChild(actionList);
-            
-            // 添加所有Action元素
-            for (AnimationAction action : actions) {
-                Element actionElement = createActionElement(doc, action);
-                actionList.appendChild(actionElement);
+            if (originalDocument == null) {
+                log.log(Level.SEVERE, "No original document cached. Must load first.");
+                return false;
             }
             
-            // 写入文件
+            // 更新原始文档中的对应Action元素
+            for (AnimationAction action : actions) {
+                updateActionInDocument(originalDocument, action);
+            }
+            
+            // 保存整个文档，保持原始格式
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             
-            DOMSource source = new DOMSource(doc);
+            // 保持原始格式设置
+            transformer.setOutputProperty(javax.xml.transform.OutputKeys.ENCODING, "UTF-8");
+            transformer.setOutputProperty(javax.xml.transform.OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+            // 不设置standalone，保持原始声明
+            
+            DOMSource source = new DOMSource(originalDocument);
             StreamResult result = new StreamResult(xmlFile);
             transformer.transform(source, result);
             
@@ -170,43 +185,65 @@ public class XMLConfigUtil {
     }
     
     /**
-     * 创建Action元素
+     * 在原始文档中更新指定的Action元素
      */
-    private static Element createActionElement(Document doc, AnimationAction action) {
-        Element actionElement = doc.createElement("Action");
-        
-        // 设置基本属性
-        actionElement.setAttribute("Name", action.getName() != null ? action.getName() : "");
-        actionElement.setAttribute("Type", action.getType() != null ? action.getType() : "");
-        
-        if (action.getClassName() != null && !action.getClassName().isEmpty()) {
-            actionElement.setAttribute("Class", action.getClassName());
+    private static void updateActionInDocument(Document doc, AnimationAction action) {
+        try {
+            NodeList actionNodes = doc.getElementsByTagName("Action");
+            
+            for (int i = 0; i < actionNodes.getLength(); i++) {
+                Element actionElement = (Element) actionNodes.item(i);
+                String actionName = actionElement.getAttribute("Name");
+                
+                // 找到对应的Action元素
+                if (actionName.equals(action.getName())) {
+                    // 只更新包含Animation的Action（可编辑的）
+                    NodeList animationNodes = actionElement.getElementsByTagName("Animation");
+                    if (animationNodes.getLength() > 0) {
+                        updateActionElement(actionElement, action);
+                    }
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            log.log(Level.WARNING, "Failed to update action in document: " + action.getName(), e);
         }
-        
-        if (action.getBorderType() != null && !action.getBorderType().isEmpty()) {
-            actionElement.setAttribute("BorderType", action.getBorderType());
-        }
-        
-        // 设置其他属性
-        for (String key : action.getAttributes().keySet()) {
-            String value = action.getAttributes().get(key);
-            if (value != null && !value.isEmpty()) {
-                actionElement.setAttribute(key, value);
+    }
+    
+    /**
+     * 更新Action元素的属性和Animation内容
+     */
+    private static void updateActionElement(Element actionElement, AnimationAction action) {
+        // 更新Action的基本属性
+        Map<String, String> attributes = action.getAttributes();
+        if (attributes != null) {
+            for (Map.Entry<String, String> entry : attributes.entrySet()) {
+                String key = entry.getKey();
+                String value = entry.getValue();
+                if (value != null && !value.trim().isEmpty()) {
+                    actionElement.setAttribute(key, value);
+                }
             }
         }
         
-        // 创建Animation元素
-        if (!action.getPoses().isEmpty()) {
-            Element animationElement = doc.createElement("Animation");
-            actionElement.appendChild(animationElement);
+        // 更新Animation元素中的Pose列表
+        NodeList animationNodes = actionElement.getElementsByTagName("Animation");
+        if (animationNodes.getLength() > 0) {
+            Element animationElement = (Element) animationNodes.item(0);
             
+            // 清除现有的Pose元素
+            NodeList poseNodes = animationElement.getElementsByTagName("Pose");
+            while (poseNodes.getLength() > 0) {
+                Node poseNode = poseNodes.item(0);
+                animationElement.removeChild(poseNode);
+            }
+            
+            // 添加更新后的Pose元素
             for (AnimationPose pose : action.getPoses()) {
-                Element poseElement = createPoseElement(doc, pose);
+                Element poseElement = createPoseElement(actionElement.getOwnerDocument(), pose);
                 animationElement.appendChild(poseElement);
             }
         }
-        
-        return actionElement;
     }
     
     /**
