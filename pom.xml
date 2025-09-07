@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.group_finity</groupId>
@@ -13,7 +13,7 @@
     <description>A desktop mascot that freely wanders and plays around the screen - Live Edition</description>
     <url>https://github.com/BegoniaHe/dc-ShimejiLive</url>
     <inceptionYear>2009</inceptionYear>
-    
+
     <licenses>
         <license>
             <name>Zlib</name>
@@ -26,7 +26,7 @@
             <comments>The license used for Shimeji-ee, by the Shimeji-ee Group.</comments>
         </license>
     </licenses>
-    
+
     <organization>
         <name>Group Finity</name>
         <url>http://www.group-finity.com/</url>
@@ -37,13 +37,13 @@
         <maven.compiler.release>21</maven.compiler.release>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        
+
         <!-- 依赖版本 -->
         <jna.version>5.17.0</jna.version>
         <flatlaf.version>3.6</flatlaf.version>
         <rhino.version>1.7.14</rhino.version>
         <absolutelayout.version>RELEASE270</absolutelayout.version>
-        
+
         <!-- 打包配置 -->
         <mainClass>com.group_finity.mascot.Main</mainClass>
     </properties>
@@ -69,7 +69,7 @@
             <artifactId>jna</artifactId>
             <version>${jna.version}</version>
         </dependency>
-        
+
         <!-- Java Native Access Platform -->
         <dependency>
             <groupId>net.java.dev.jna</groupId>
@@ -102,10 +102,10 @@
     <build>
         <defaultGoal>clean compile</defaultGoal>
         <finalName>Shimeji-ee</finalName>
-        
+
         <!-- 使用标准Maven目录结构 -->
         <sourceDirectory>src/main/java</sourceDirectory>
-        
+
         <resources>
             <!-- 复制src/main/resources中的文件 -->
             <resource>
@@ -127,7 +127,7 @@
             </resource>
             <!-- 不将img和conf目录打包到JAR内部，保持外部可访问 -->
         </resources>
-        
+
         <plugins>
             <!-- 强制JDK 21+ -->
             <plugin>
@@ -151,7 +151,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- 编译插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -161,7 +161,7 @@
                     <release>${maven.compiler.release}</release>
                 </configuration>
             </plugin>
-            
+
             <!-- JAR打包插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -178,14 +178,15 @@
                             <!-- JDK 21+ 原生访问权限 -->
                             <Enable-Native-Access>ALL-UNNAMED</Enable-Native-Access>
                             <!-- 添加模块开放权�?-->
-                            <Add-Opens>java.base/java.lang java.desktop/sun.awt java.desktop/java.awt</Add-Opens>
+                            <Add-Opens>java.base/java.lang java.desktop/sun.awt
+                                java.desktop/java.awt</Add-Opens>
                             <!-- 指定外部资源路径 -->
                             <Class-Path>. conf/ img/</Class-Path>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
-            
+
             <!-- Shade插件 - 创建包含所有依赖的fat jar -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -210,7 +211,8 @@
                                 </filter>
                             </filters>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>${mainClass}</mainClass>
                                 </transformer>
                             </transformers>
@@ -218,7 +220,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
             <!-- 资源插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -307,7 +309,10 @@
                                 </goals>
                                 <configuration>
                                     <executable>java</executable>
-                                    <commandlineArgs>--enable-native-access=ALL-UNNAMED -Xmx512M -Xms128M -XX:ReservedCodeCacheSize=128M -XX:+UseG1GC -XX:MaxGCPauseMillis=50 -XX:+UseStringDeduplication -cp "${project.build.directory}${file.separator}${project.build.finalName}.jar" com.group_finity.mascot.Main</commandlineArgs>
+                                    <commandlineArgs>--enable-native-access=ALL-UNNAMED -Xmx512M
+                                        -Xms128M -XX:ReservedCodeCacheSize=128M -XX:+UseZGC -cp
+                                        "${project.build.directory}${file.separator}${project.build.finalName}.jar"
+                                        com.group_finity.mascot.Main</commandlineArgs>
                                     <workingDirectory>${project.basedir}</workingDirectory>
                                 </configuration>
                             </execution>
@@ -317,7 +322,7 @@
             </build>
         </profile>
 
-        
+
         <!-- Windows jpackage 构建配置 -->
         <profile>
             <id>jpackage-win</id>
@@ -338,7 +343,8 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/jpackage-windows-portable/input</outputDirectory>
+                                    <outputDirectory>
+                                        ${project.build.directory}/jpackage-windows-portable/input</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.build.directory}</directory>
@@ -357,7 +363,8 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/jpackage-windows-msi/input</outputDirectory>
+                                    <outputDirectory>
+                                        ${project.build.directory}/jpackage-windows-msi/input</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.build.directory}</directory>
@@ -370,13 +377,29 @@
                             </execution>
                         </executions>
                     </plugin>
-                    
+
                     <!-- Exec插件 - 执行jpackage命令 -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>exec-maven-plugin</artifactId>
                         <version>3.5.0</version>
                         <executions>
+                            <!-- 清理便携版输出目录 -->
+                            <execution>
+                                <id>clean-portable-output</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>powershell</executable>
+                                    <workingDirectory>${project.build.directory}/jpackage-windows-portable</workingDirectory>
+                                    <arguments>
+                                        <argument>-Command</argument>
+                                        <argument>if (Test-Path "Shimeji-ee") { Remove-Item -Path "Shimeji-ee" -Recurse -Force }</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
                             <!-- 创建便携版app-image -->
                             <execution>
                                 <id>jpackage-portable-app-image</id>
@@ -386,7 +409,8 @@
                                 </goals>
                                 <configuration>
                                     <executable>jpackage</executable>
-                                    <workingDirectory>${project.build.directory}/jpackage-windows-portable</workingDirectory>
+                                    <workingDirectory>
+                                        ${project.build.directory}/jpackage-windows-portable</workingDirectory>
                                     <arguments>
                                         <argument>--input</argument>
                                         <argument>input</argument>
@@ -415,11 +439,7 @@
                                         <argument>--java-options</argument>
                                         <argument>-XX:ReservedCodeCacheSize=128M</argument>
                                         <argument>--java-options</argument>
-                                        <argument>-XX:+UseG1GC</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:MaxGCPauseMillis=50</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:+UseStringDeduplication</argument>
+                                        <argument>-XX:+UseZGC</argument>
                                         <argument>--java-options</argument>
                                         <argument>--enable-native-access=ALL-UNNAMED</argument>
                                         <argument>--java-options</argument>
@@ -465,6 +485,22 @@
                             </execution>
                             <!-- 创建MSI app-image -->
                             <execution>
+                                <id>clean-msi-output</id>
+                                <phase>install</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <executable>powershell</executable>
+                                    <workingDirectory>${project.build.directory}/jpackage-windows-msi</workingDirectory>
+                                    <arguments>
+                                        <argument>-Command</argument>
+                                        <argument>if (Test-Path "Shimeji-ee") { Remove-Item -Path "Shimeji-ee" -Recurse -Force }</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <!-- 创建MSI app-image -->
+                            <execution>
                                 <id>jpackage-msi-app-image</id>
                                 <phase>install</phase>
                                 <goals>
@@ -472,7 +508,8 @@
                                 </goals>
                                 <configuration>
                                     <executable>jpackage</executable>
-                                    <workingDirectory>${project.build.directory}/jpackage-windows-msi</workingDirectory>
+                                    <workingDirectory>
+                                        ${project.build.directory}/jpackage-windows-msi</workingDirectory>
                                     <arguments>
                                         <argument>--input</argument>
                                         <argument>input</argument>
@@ -501,11 +538,7 @@
                                         <argument>--java-options</argument>
                                         <argument>-XX:ReservedCodeCacheSize=128M</argument>
                                         <argument>--java-options</argument>
-                                        <argument>-XX:+UseG1GC</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:MaxGCPauseMillis=50</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:+UseStringDeduplication</argument>
+                                        <argument>-XX:+UseZGC</argument>
                                         <argument>--java-options</argument>
                                         <argument>--enable-native-access=ALL-UNNAMED</argument>
                                         <argument>--java-options</argument>
@@ -542,7 +575,8 @@
                                 </goals>
                                 <configuration>
                                     <executable>jpackage</executable>
-                                    <workingDirectory>${project.build.directory}/jpackage-windows-msi</workingDirectory>
+                                    <workingDirectory>
+                                        ${project.build.directory}/jpackage-windows-msi</workingDirectory>
                                     <arguments>
                                         <argument>--app-image</argument>
                                         <argument>Shimeji-ee</argument>
@@ -586,7 +620,7 @@
                 </plugins>
             </build>
         </profile>
-        
+
         <!-- macOS jpackage 构建配置 -->
         <profile>
             <id>jpackage-mac</id>
@@ -607,7 +641,8 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/jpackage-macos-app/input</outputDirectory>
+                                    <outputDirectory>
+                                        ${project.build.directory}/jpackage-macos-app/input</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.build.directory}</directory>
@@ -626,7 +661,8 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/jpackage-macos-dmg/input</outputDirectory>
+                                    <outputDirectory>
+                                        ${project.build.directory}/jpackage-macos-dmg/input</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.build.directory}</directory>
@@ -639,7 +675,7 @@
                             </execution>
                         </executions>
                     </plugin>
-                    
+
                     <!-- Exec插件 - 执行jpackage命令 -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
@@ -688,11 +724,7 @@
                                         <argument>--java-options</argument>
                                         <argument>-XX:ReservedCodeCacheSize=128M</argument>
                                         <argument>--java-options</argument>
-                                        <argument>-XX:+UseG1GC</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:MaxGCPauseMillis=50</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:+UseStringDeduplication</argument>
+                                        <argument>-XX:+UseZGC</argument>
                                         <argument>--java-options</argument>
                                         <argument>--enable-native-access=ALL-UNNAMED</argument>
                                         <argument>--java-options</argument>
@@ -807,11 +839,7 @@
                                         <argument>--java-options</argument>
                                         <argument>-XX:ReservedCodeCacheSize=128M</argument>
                                         <argument>--java-options</argument>
-                                        <argument>-XX:+UseG1GC</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:MaxGCPauseMillis=50</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:+UseStringDeduplication</argument>
+                                        <argument>-XX:+UseZGC</argument>
                                         <argument>--java-options</argument>
                                         <argument>--enable-native-access=ALL-UNNAMED</argument>
                                         <argument>--java-options</argument>
@@ -907,7 +935,8 @@
                                     <workingDirectory>${project.build.directory}</workingDirectory>
                                     <arguments>
                                         <argument>-c</argument>
-                                        <argument>find jpackage-macos-dmg -name "*.dmg" -exec mv {} . \;</argument>
+                                        <argument>find jpackage-macos-dmg -name "*.dmg" -exec mv {}
+                                            . \;</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -925,9 +954,13 @@
                                         <argument>-c</argument>
                                         <argument>
                                             # 设置应用执行权限
-                                            chmod +x jpackage-macos-app/Shimeji-ee.app/Contents/MacOS/Shimeji-ee || true;
-                                            chmod +x jpackage-macos-dmg/Shimeji-ee.app/Contents/MacOS/Shimeji-ee || true;
-                                            
+                                            chmod +x
+                                            jpackage-macos-app/Shimeji-ee.app/Contents/MacOS/Shimeji-ee
+                                            || true;
+                                            chmod +x
+                                            jpackage-macos-dmg/Shimeji-ee.app/Contents/MacOS/Shimeji-ee
+                                            || true;
+
                                             echo "macOS 权限设置完成"
                                         </argument>
                                     </arguments>
@@ -938,7 +971,7 @@
                 </plugins>
             </build>
         </profile>
-        
+
         <!-- Linux jpackage 构建配置 -->
         <profile>
             <id>jpackage-linux</id>
@@ -959,7 +992,8 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/jpackage-linux-portable/input</outputDirectory>
+                                    <outputDirectory>
+                                        ${project.build.directory}/jpackage-linux-portable/input</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.build.directory}</directory>
@@ -985,7 +1019,8 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/jpackage-linux-deb/input</outputDirectory>
+                                    <outputDirectory>
+                                        ${project.build.directory}/jpackage-linux-deb/input</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.build.directory}</directory>
@@ -1011,7 +1046,8 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/jpackage-linux-rpm/input</outputDirectory>
+                                    <outputDirectory>
+                                        ${project.build.directory}/jpackage-linux-rpm/input</outputDirectory>
                                     <resources>
                                         <resource>
                                             <directory>${project.build.directory}</directory>
@@ -1031,7 +1067,7 @@
                             </execution>
                         </executions>
                     </plugin>
-                    
+
                     <!-- Exec插件 - 执行jpackage命令 -->
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
@@ -1047,7 +1083,8 @@
                                 </goals>
                                 <configuration>
                                     <executable>jpackage</executable>
-                                    <workingDirectory>${project.build.directory}/jpackage-linux-portable</workingDirectory>
+                                    <workingDirectory>
+                                        ${project.build.directory}/jpackage-linux-portable</workingDirectory>
                                     <arguments>
                                         <argument>--input</argument>
                                         <argument>input</argument>
@@ -1076,11 +1113,7 @@
                                         <argument>--java-options</argument>
                                         <argument>-XX:ReservedCodeCacheSize=128M</argument>
                                         <argument>--java-options</argument>
-                                        <argument>-XX:+UseG1GC</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:MaxGCPauseMillis=50</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:+UseStringDeduplication</argument>
+                                        <argument>-XX:+UseZGC</argument>
                                         <argument>--java-options</argument>
                                         <argument>--enable-native-access=ALL-UNNAMED</argument>
                                         <argument>--java-options</argument>
@@ -1185,11 +1218,7 @@
                                         <argument>--java-options</argument>
                                         <argument>-XX:ReservedCodeCacheSize=128M</argument>
                                         <argument>--java-options</argument>
-                                        <argument>-XX:+UseG1GC</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:MaxGCPauseMillis=50</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:+UseStringDeduplication</argument>
+                                        <argument>-XX:+UseZGC</argument>
                                         <argument>--java-options</argument>
                                         <argument>--enable-native-access=ALL-UNNAMED</argument>
                                         <argument>--java-options</argument>
@@ -1314,11 +1343,7 @@
                                         <argument>--java-options</argument>
                                         <argument>-XX:ReservedCodeCacheSize=128M</argument>
                                         <argument>--java-options</argument>
-                                        <argument>-XX:+UseG1GC</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:MaxGCPauseMillis=50</argument>
-                                        <argument>--java-options</argument>
-                                        <argument>-XX:+UseStringDeduplication</argument>
+                                        <argument>-XX:+UseZGC</argument>
                                         <argument>--java-options</argument>
                                         <argument>--enable-native-access=ALL-UNNAMED</argument>
                                         <argument>--java-options</argument>
@@ -1417,7 +1442,8 @@
                                     <workingDirectory>${project.build.directory}</workingDirectory>
                                     <arguments>
                                         <argument>-c</argument>
-                                        <argument>find jpackage-linux-deb -name "*.deb" -exec mv {} . \;</argument>
+                                        <argument>find jpackage-linux-deb -name "*.deb" -exec mv {}
+                                            . \;</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
@@ -1433,7 +1459,8 @@
                                     <workingDirectory>${project.build.directory}</workingDirectory>
                                     <arguments>
                                         <argument>-c</argument>
-                                        <argument>find jpackage-linux-rpm -name "*.rpm" -exec mv {} . \;</argument>
+                                        <argument>find jpackage-linux-rpm -name "*.rpm" -exec mv {}
+                                            . \;</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
