@@ -951,17 +951,7 @@
                                     <workingDirectory>${project.build.directory}</workingDirectory>
                                     <arguments>
                                         <argument>-c</argument>
-                                        <argument>
-                                            # 设置应用执行权限
-                                            chmod +x
-                                            jpackage-macos-app/Shimeji-ee.app/Contents/MacOS/Shimeji-ee
-                                            || true;
-                                            chmod +x
-                                            jpackage-macos-dmg/Shimeji-ee.app/Contents/MacOS/Shimeji-ee
-                                            || true;
-
-                                            echo "macOS 权限设置完成"
-                                        </argument>
+                                        <argument>chmod +x jpackage-macos-app/Shimeji-ee.app/Contents/MacOS/Shimeji-ee || true; chmod +x jpackage-macos-dmg/Shimeji-ee.app/Contents/MacOS/Shimeji-ee || true; echo "macOS 权限设置完成"</argument>
                                     </arguments>
                                 </configuration>
                             </execution>
