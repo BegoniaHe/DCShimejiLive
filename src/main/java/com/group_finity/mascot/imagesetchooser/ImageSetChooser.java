@@ -102,97 +102,12 @@ public class ImageSetChooser extends javax.swing.JDialog
         int row = 0;	// Current row
         for( String imageSet : children )
         {
-            // Determine actions file
-            String filePath = baseDir + "/conf/";
+            String filePath = baseDir + "/img/" + imageSet + "/conf/";
             String actionsFile = filePath + "actions.xml";
-            if( new File( filePath + "動作.xml" ).exists( ) )
-                actionsFile = filePath + "動作.xml";
-            
-            filePath = baseDir + "/conf/" + imageSet + "/";
-            if( new File( filePath + "actions.xml" ).exists( ) )
-                actionsFile = filePath + "actions.xml";
-            if( new File( filePath + "動作.xml" ).exists( ) )
-                actionsFile = filePath + "動作.xml";
-            if( new File( filePath + "Õïòõ¢£.xml" ).exists( ) )
-                actionsFile = filePath + "Õïòõ¢£.xml";
-            if( new File( filePath + "¦-º@.xml" ).exists( ) )
-                actionsFile = filePath + "¦-º@.xml";
-            if( new File( filePath + "ô«ìý.xml" ).exists( ) )
-                actionsFile = filePath + "ô«ìý.xml";
-            if( new File( filePath + "one.xml" ).exists( ) )
-                actionsFile = filePath + "one.xml";
-            if( new File( filePath + "1.xml" ).exists( ) )
-                actionsFile = filePath + "1.xml";
-            
-            filePath = baseDir + "/img/" + imageSet + "/conf/";
-            if( new File( filePath + "actions.xml" ).exists( ) )
-                actionsFile = filePath + "actions.xml";
-            if( new File( filePath + "動作.xml" ).exists( ) )
-                actionsFile = filePath + "動作.xml";
-            if( new File( filePath + "Õïòõ¢£.xml" ).exists( ) )
-                actionsFile = filePath + "Õïòõ¢£.xml";
-            if( new File( filePath + "¦-º@.xml" ).exists( ) )
-                actionsFile = filePath + "¦-º@.xml";
-            if( new File( filePath + "ô«ìý.xml" ).exists( ) )
-                actionsFile = filePath + "ô«ìý.xml";
-            if( new File( filePath + "one.xml" ).exists( ) )
-                actionsFile = filePath + "one.xml";
-            if( new File( filePath + "1.xml" ).exists( ) )
-                actionsFile = filePath + "1.xml";
 
-            // Determine behaviours file
-            filePath = baseDir + "/conf/";
             String behaviorsFile = filePath + "behaviors.xml";
-            if( new File( filePath + "行動.xml" ).exists( ) )
-                behaviorsFile = filePath + "行動.xml";
             
-            filePath = baseDir + "/conf/" + imageSet + "/";
-            if( new File( filePath + "behaviors.xml" ).exists( ) )
-                behaviorsFile = filePath + "behaviors.xml";
-            if( new File( filePath + "behavior.xml" ).exists( ) )
-                behaviorsFile = filePath + "behavior.xml";
-            if( new File( filePath + "行動.xml" ).exists( ) )
-                behaviorsFile = filePath + "行動.xml";
-            if( new File( filePath + "ÞíîÕïò.xml" ).exists( ) )
-                behaviorsFile = filePath + "ÞíîÕïò.xml";
-            if( new File( filePath + "ªµ¦-.xml" ).exists( ) )
-                behaviorsFile = filePath + "ªµ¦-.xml";
-            if( new File( filePath + "ìsô«.xml" ).exists( ) )
-                behaviorsFile = filePath + "ìsô«.xml";
-            if( new File( filePath + "two.xml" ).exists( ) )
-                behaviorsFile = filePath + "two.xml";
-            if( new File( filePath + "2.xml" ).exists( ) )
-                behaviorsFile = filePath + "2.xml";
-            
-            filePath = baseDir + "/img/" + imageSet + "/conf/";
-            if( new File( filePath + "behaviors.xml" ).exists( ) )
-                behaviorsFile = filePath + "behaviors.xml";
-            if( new File( filePath + "behavior.xml" ).exists( ) )
-                behaviorsFile = filePath + "behavior.xml";
-            if( new File( filePath + "行動.xml" ).exists( ) )
-                behaviorsFile = filePath + "行動.xml";
-            if( new File( filePath + "ÞíîÕïò.xml" ).exists( ) )
-                behaviorsFile = filePath + "ÞíîÕïò.xml";
-            if( new File( filePath + "ªµ¦-.xml" ).exists( ) )
-                behaviorsFile = filePath + "ªµ¦-.xml";
-            if( new File( filePath + "ìsô«.xml" ).exists( ) )
-                behaviorsFile = filePath + "ìsô«.xml";
-            if( new File( filePath + "two.xml" ).exists( ) )
-                behaviorsFile = filePath + "two.xml";
-            if( new File( filePath + "2.xml" ).exists( ) )
-                behaviorsFile = filePath + "2.xml";
-            
-            // Determine information file
-            filePath = baseDir + "/conf/";
             String infoFile = filePath + "info.xml";
-            
-            filePath = baseDir + "/conf/" + imageSet + "/";
-            if( new File( filePath + "info.xml" ).exists( ) )
-                infoFile = filePath + "info.xml";
-            
-            filePath = baseDir + "/img/" + imageSet + "/conf/";
-            if( new File( filePath + "info.xml" ).exists( ) )
-                infoFile = filePath + "info.xml";
 
             String imageFile = topDir + "/" + imageSet + "/Preview.png";
             String caption = imageSet;

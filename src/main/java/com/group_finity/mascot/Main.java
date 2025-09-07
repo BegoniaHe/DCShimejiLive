@@ -506,43 +506,8 @@ public class Main {
                 baseDir = ".";
             }
             
-            // try to load in the correct xml files
-            String filePath = baseDir + "/conf/";
+            String filePath = baseDir + "/img/" + imageSet + "/conf/";
             String actionsFile = filePath + "actions.xml";
-            if (new File(filePath + "動作.xml").exists())
-                actionsFile = filePath + "動作.xml";
-
-            filePath = baseDir + "/conf/" + imageSet + "/";
-            if (new File(filePath + "actions.xml").exists())
-                actionsFile = filePath + "actions.xml";
-            else if (new File(filePath + "動作.xml").exists())
-                actionsFile = filePath + "動作.xml";
-            else if (new File(filePath + "Õïòõ¢£.xml").exists())
-                actionsFile = filePath + "Õïòõ¢£.xml";
-            else if (new File(filePath + "¦-º@.xml").exists())
-                actionsFile = filePath + "¦-º@.xml";
-            else if (new File(filePath + "ô«ìý.xml").exists())
-                actionsFile = filePath + "ô«ìý.xml";
-            else if (new File(filePath + "one.xml").exists())
-                actionsFile = filePath + "one.xml";
-            else if (new File(filePath + "1.xml").exists())
-                actionsFile = filePath + "1.xml";
-
-            filePath = baseDir + "/img/" + imageSet + "/conf/";
-            if (new File(filePath + "actions.xml").exists())
-                actionsFile = filePath + "actions.xml";
-            else if (new File(filePath + "動作.xml").exists())
-                actionsFile = filePath + "動作.xml";
-            else if (new File(filePath + "Õïòõ¢£.xml").exists())
-                actionsFile = filePath + "Õïòõ¢£.xml";
-            else if (new File(filePath + "¦-º@.xml").exists())
-                actionsFile = filePath + "¦-º@.xml";
-            else if (new File(filePath + "ô«ìý.xml").exists())
-                actionsFile = filePath + "ô«ìý.xml";
-            else if (new File(filePath + "one.xml").exists())
-                actionsFile = filePath + "one.xml";
-            else if (new File(filePath + "1.xml").exists())
-                actionsFile = filePath + "1.xml";
 
             log.log(Level.INFO, imageSet + " Read Action File ({0})", actionsFile);
 
@@ -553,46 +518,7 @@ public class Main {
 
             configuration.load(new Entry(actions.getDocumentElement()), imageSet);
 
-            filePath = baseDir + "/conf/";
             String behaviorsFile = filePath + "behaviors.xml";
-            if (new File(filePath + "行動.xml").exists())
-                behaviorsFile = filePath + "行動.xml";
-
-            filePath = baseDir + "/conf/" + imageSet + "/";
-            if (new File(filePath + "behaviors.xml").exists())
-                behaviorsFile = filePath + "behaviors.xml";
-            else if (new File(filePath + "behavior.xml").exists())
-                behaviorsFile = filePath + "behavior.xml";
-            else if (new File(filePath + "行動.xml").exists())
-                behaviorsFile = filePath + "行動.xml";
-            else if (new File(filePath + "ÞíîÕïò.xml").exists())
-                behaviorsFile = filePath + "ÞíîÕïò.xml";
-            else if (new File(filePath + "ªµ¦-.xml").exists())
-                behaviorsFile = filePath + "ªµ¦-.xml";
-            else if (new File(filePath + "ìsô«.xml").exists())
-                behaviorsFile = filePath + "ìsô«.xml";
-            else if (new File(filePath + "two.xml").exists())
-                behaviorsFile = filePath + "two.xml";
-            else if (new File(filePath + "2.xml").exists())
-                behaviorsFile = filePath + "2.xml";
-
-            filePath = baseDir + "/img/" + imageSet + "/conf/";
-            if (new File(filePath + "behaviors.xml").exists())
-                behaviorsFile = filePath + "behaviors.xml";
-            else if (new File(filePath + "behavior.xml").exists())
-                behaviorsFile = filePath + "behavior.xml";
-            else if (new File(filePath + "行動.xml").exists())
-                behaviorsFile = filePath + "行動.xml";
-            else if (new File(filePath + "ÞíîÕïò.xml").exists())
-                behaviorsFile = filePath + "ÞíîÕïò.xml";
-            else if (new File(filePath + "ªµ¦-.xml").exists())
-                behaviorsFile = filePath + "ªµ¦-.xml";
-            else if (new File(filePath + "ìsô«.xml").exists())
-                behaviorsFile = filePath + "ìsô«.xml";
-            else if (new File(filePath + "two.xml").exists())
-                behaviorsFile = filePath + "two.xml";
-            else if (new File(filePath + "2.xml").exists())
-                behaviorsFile = filePath + "2.xml";
 
             log.log(Level.INFO, imageSet + " Read Behavior File ({0})", behaviorsFile);
 
@@ -601,16 +527,7 @@ public class Main {
 
             configuration.load(new Entry(behaviors.getDocumentElement()), imageSet);
 
-            filePath = baseDir + "/conf/";
             String infoFile = filePath + "info.xml";
-
-            filePath = baseDir + "/conf/" + imageSet + "/";
-            if (new File(filePath + "info.xml").exists())
-                infoFile = filePath + "info.xml";
-
-            filePath = baseDir + "/img/" + imageSet + "/conf/";
-            if (new File(filePath + "info.xml").exists())
-                infoFile = filePath + "info.xml";
 
             if (new File(infoFile).exists()) {
                 log.log(Level.INFO, imageSet + " Read Information File ({0})", infoFile);
