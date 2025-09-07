@@ -55,7 +55,7 @@ jobs:
         id: build
         run: |
           echo "Building JAR using mvnd clean package..."
-          if mvnd clean package -DskipTests -B -V -Dmvnd.idleTimeout=30m -Dmvnd.keepAlive=30s; then
+          if mvnd clean package -DskipTests -B -V; then
             echo "Build successful"
             echo "build_success=true" >> $GITHUB_OUTPUT
           
@@ -151,9 +151,9 @@ jobs:
           Write-Host "Testing mvnd connection..."
           & C:\mvnd\maven-mvnd-1.0.2-windows-amd64\bin\mvnd.cmd --version
           
-          # Build using mvnd with jpackage-win profile with increased timeout
+          # Build using mvnd with jpackage-win profile
           Write-Host "Starting build with mvnd..."
-          & C:\mvnd\maven-mvnd-1.0.2-windows-amd64\bin\mvnd.cmd -P jpackage-win install -Dmvnd.idleTimeout=30m -Dmvnd.keepAlive=30s -Dmvnd.maxLostKeepAlive=10 -B -V
+          & C:\mvnd\maven-mvnd-1.0.2-windows-amd64\bin\mvnd.cmd -P jpackage-win install -B -V
         shell: powershell
 
       - name: Upload Windows MSI installer
@@ -218,7 +218,7 @@ jobs:
       - name: Build macOS AMD64 packages with mvnd
         run: |
           # Build using mvnd with jpackage-mac profile
-          /opt/mvnd/bin/mvnd -P jpackage-mac install -B -V -Dmvnd.idleTimeout=30m -Dmvnd.keepAlive=30s -Dmvnd.maxLostKeepAlive=10
+          /opt/mvnd/bin/mvnd -P jpackage-mac install -B -V
 
       - name: Upload macOS AMD64 DMG installer
         uses: actions/upload-artifact@v4
@@ -282,7 +282,7 @@ jobs:
       - name: Build macOS ARM64 packages with mvnd
         run: |
           # Build using mvnd with jpackage-mac profile
-          /opt/mvnd/bin/mvnd -P jpackage-mac install -B -V -Dmvnd.idleTimeout=30m -Dmvnd.keepAlive=30s -Dmvnd.maxLostKeepAlive=10
+          /opt/mvnd/bin/mvnd -P jpackage-mac install -B -V
 
       - name: Upload macOS ARM64 DMG installer
         uses: actions/upload-artifact@v4
@@ -319,6 +319,14 @@ jobs:
           tar -xzf mvnd.tar.gz
           sudo mv maven-mvnd-1.0.2-linux-amd64 /opt/mvnd
           sudo ln -s /opt/mvnd/bin/mvnd /usr/local/bin/mvnd
+          # Configure mvnd for CI environment
+          mkdir -p ~/.m2/mvnd/1.0.2
+          cat > ~/.m2/mvnd/1.0.2/mvnd.properties << EOF
+          mvnd.idleTimeout=30m
+          mvnd.maxLostKeepAlive=10
+          mvnd.socketFamily=inet
+          mvnd.debug=false
+          EOF
           mvnd --version
       - name: Cache Maven dependencies
         uses: actions/cache@v4
@@ -328,7 +336,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build Linux amd64 packages with mvnd
         run: |
-          mvnd -P jpackage-linux install
+          mvnd -P jpackage-linux install -B -V
       - name: Upload Linux amd64 DEB package
         uses: actions/upload-artifact@v4
         with:
