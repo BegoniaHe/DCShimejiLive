@@ -41,13 +41,21 @@ jobs:
           tar -xzf mvnd.tar.gz
           sudo mv maven-mvnd-1.0.2-linux-amd64 /opt/mvnd
           sudo ln -s /opt/mvnd/bin/mvnd /usr/local/bin/mvnd
+          # Configure mvnd for CI environment
+          mkdir -p ~/.m2/mvnd/1.0.2
+          cat > ~/.m2/mvnd/1.0.2/mvnd.properties << EOF
+          mvnd.idleTimeout=30m
+          mvnd.maxLostKeepAlive=10
+          mvnd.socketFamily=inet
+          mvnd.debug=false
+          EOF
           mvnd --version
 
       - name: Build JAR with Maven Daemon
         id: build
         run: |
           echo "Building JAR using mvnd clean package..."
-          if mvnd clean package -DskipTests; then
+          if mvnd clean package -DskipTests -B -V -Dmvnd.idleTimeout=30m -Dmvnd.keepAlive=30s; then
             echo "Build successful"
             echo "build_success=true" >> $GITHUB_OUTPUT
           
@@ -118,6 +126,13 @@ jobs:
           Invoke-WebRequest -Uri $url -OutFile $output
           Expand-Archive -Path $output -DestinationPath "C:\mvnd"
           echo "C:\mvnd\maven-mvnd-1.0.2-windows-amd64\bin" >> $env:GITHUB_PATH
+          # Set MVND_HOME environment variable
+          echo "MVND_HOME=C:\mvnd\maven-mvnd-1.0.2-windows-amd64" >> $env:GITHUB_ENV
+          # Configure mvnd for CI environment
+          mkdir -p "$env:USERPROFILE\.m2\mvnd\1.0.2"
+          echo "mvnd.idleTimeout=30m" > "$env:USERPROFILE\.m2\mvnd\1.0.2\mvnd.properties"
+          echo "mvnd.maxLostKeepAlive=10" >> "$env:USERPROFILE\.m2\mvnd\1.0.2\mvnd.properties"
+          echo "mvnd.socketFamily=inet" >> "$env:USERPROFILE\.m2\mvnd\1.0.2\mvnd.properties"
         shell: powershell
 
       - name: Cache Maven dependencies
@@ -129,8 +144,16 @@ jobs:
 
       - name: Build Windows packages with mvnd
         run: |
-          # Build using mvnd with jpackage-win profile
-          mvnd -P jpackage-win install
+          # Configure mvnd environment
+          $env:MVND_HOME = "C:\mvnd\maven-mvnd-1.0.2-windows-amd64"
+          
+          # Test mvnd connection first
+          Write-Host "Testing mvnd connection..."
+          & C:\mvnd\maven-mvnd-1.0.2-windows-amd64\bin\mvnd.cmd --version
+          
+          # Build using mvnd with jpackage-win profile with increased timeout
+          Write-Host "Starting build with mvnd..."
+          & C:\mvnd\maven-mvnd-1.0.2-windows-amd64\bin\mvnd.cmd -P jpackage-win install -Dmvnd.idleTimeout=30m -Dmvnd.keepAlive=30s -Dmvnd.maxLostKeepAlive=10 -B -V
         shell: powershell
 
       - name: Upload Windows MSI installer
@@ -174,6 +197,14 @@ jobs:
           # Set MVND_HOME environment variable
           echo "MVND_HOME=/opt/mvnd" >> $GITHUB_ENV
           echo "/opt/mvnd/bin" >> $GITHUB_PATH
+          # Configure mvnd for CI environment
+          mkdir -p ~/.m2/mvnd/1.0.2
+          cat > ~/.m2/mvnd/1.0.2/mvnd.properties << EOF
+          mvnd.idleTimeout=30m
+          mvnd.maxLostKeepAlive=10
+          mvnd.socketFamily=inet
+          mvnd.debug=false
+          EOF
           # Test mvnd installation
           /opt/mvnd/bin/mvnd --version
 
@@ -187,7 +218,7 @@ jobs:
       - name: Build macOS AMD64 packages with mvnd
         run: |
           # Build using mvnd with jpackage-mac profile
-          /opt/mvnd/bin/mvnd -P jpackage-mac install
+          /opt/mvnd/bin/mvnd -P jpackage-mac install -B -V -Dmvnd.idleTimeout=30m -Dmvnd.keepAlive=30s -Dmvnd.maxLostKeepAlive=10
 
       - name: Upload macOS AMD64 DMG installer
         uses: actions/upload-artifact@v4
