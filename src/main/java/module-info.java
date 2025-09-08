@@ -1,5 +1,5 @@
 module com.group_finity.mascot {
-    requires java.desktop;
+    requires transitive java.desktop;
     requires java.management;
     requires java.logging;
     requires java.scripting;
@@ -13,6 +13,10 @@ module com.group_finity.mascot {
     exports com.group_finity.mascot;
     exports com.group_finity.mascot.action;
     exports com.group_finity.mascot.animation;
+    exports com.group_finity.mascot.animationeditor;
+    exports com.group_finity.mascot.animationeditor.model;
+    exports com.group_finity.mascot.animationeditor.ui;
+    exports com.group_finity.mascot.animationeditor.util;
     exports com.group_finity.mascot.behavior;
     exports com.group_finity.mascot.config;
     exports com.group_finity.mascot.environment;

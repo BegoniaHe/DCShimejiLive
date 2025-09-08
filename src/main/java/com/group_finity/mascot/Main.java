@@ -1,7 +1,9 @@
 package com.group_finity.mascot;
 
 import java.awt.AWTException;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.RenderingHints;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.image.BufferedImage;
@@ -36,6 +38,7 @@ import com.group_finity.mascot.exception.CantBeAliveException;
 import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
+import com.group_finity.mascot.animationeditor.AnimationEditor;
 import com.group_finity.mascot.license.LicenseManager;
 import com.group_finity.mascot.license.LicenseChecker;
 import com.group_finity.mascot.license.LicenseLevel;
@@ -90,7 +93,7 @@ public class Main {
     public static final Path SOUND_DIRECTORY = Paths.get("sound");
     public static final Path SETTINGS_FILE = CONFIG_DIRECTORY.resolve("settings.properties");
     public static final Path LOGGING_FILE = CONFIG_DIRECTORY.resolve("logging.properties");
-    public static final Path ICON_FILE = IMAGE_DIRECTORY.resolve("icon.png");
+    public static final Path ICON_FILE = IMAGE_DIRECTORY.resolve("icon.ico");
     
     // Action that matches the "Gather Around Mouse!" context menu command
     static final String BEHAVIOR_GATHER = "ChaseMouse";
@@ -503,43 +506,8 @@ public class Main {
                 baseDir = ".";
             }
             
-            // try to load in the correct xml files
-            String filePath = baseDir + "/conf/";
+            String filePath = baseDir + "/img/" + imageSet + "/conf/";
             String actionsFile = filePath + "actions.xml";
-            if (new File(filePath + "動作.xml").exists())
-                actionsFile = filePath + "動作.xml";
-
-            filePath = baseDir + "/conf/" + imageSet + "/";
-            if (new File(filePath + "actions.xml").exists())
-                actionsFile = filePath + "actions.xml";
-            else if (new File(filePath + "動作.xml").exists())
-                actionsFile = filePath + "動作.xml";
-            else if (new File(filePath + "Õïòõ¢£.xml").exists())
-                actionsFile = filePath + "Õïòõ¢£.xml";
-            else if (new File(filePath + "¦-º@.xml").exists())
-                actionsFile = filePath + "¦-º@.xml";
-            else if (new File(filePath + "ô«ìý.xml").exists())
-                actionsFile = filePath + "ô«ìý.xml";
-            else if (new File(filePath + "one.xml").exists())
-                actionsFile = filePath + "one.xml";
-            else if (new File(filePath + "1.xml").exists())
-                actionsFile = filePath + "1.xml";
-
-            filePath = baseDir + "/img/" + imageSet + "/conf/";
-            if (new File(filePath + "actions.xml").exists())
-                actionsFile = filePath + "actions.xml";
-            else if (new File(filePath + "動作.xml").exists())
-                actionsFile = filePath + "動作.xml";
-            else if (new File(filePath + "Õïòõ¢£.xml").exists())
-                actionsFile = filePath + "Õïòõ¢£.xml";
-            else if (new File(filePath + "¦-º@.xml").exists())
-                actionsFile = filePath + "¦-º@.xml";
-            else if (new File(filePath + "ô«ìý.xml").exists())
-                actionsFile = filePath + "ô«ìý.xml";
-            else if (new File(filePath + "one.xml").exists())
-                actionsFile = filePath + "one.xml";
-            else if (new File(filePath + "1.xml").exists())
-                actionsFile = filePath + "1.xml";
 
             log.log(Level.INFO, imageSet + " Read Action File ({0})", actionsFile);
 
@@ -550,46 +518,7 @@ public class Main {
 
             configuration.load(new Entry(actions.getDocumentElement()), imageSet);
 
-            filePath = baseDir + "/conf/";
             String behaviorsFile = filePath + "behaviors.xml";
-            if (new File(filePath + "行動.xml").exists())
-                behaviorsFile = filePath + "行動.xml";
-
-            filePath = baseDir + "/conf/" + imageSet + "/";
-            if (new File(filePath + "behaviors.xml").exists())
-                behaviorsFile = filePath + "behaviors.xml";
-            else if (new File(filePath + "behavior.xml").exists())
-                behaviorsFile = filePath + "behavior.xml";
-            else if (new File(filePath + "行動.xml").exists())
-                behaviorsFile = filePath + "行動.xml";
-            else if (new File(filePath + "ÞíîÕïò.xml").exists())
-                behaviorsFile = filePath + "ÞíîÕïò.xml";
-            else if (new File(filePath + "ªµ¦-.xml").exists())
-                behaviorsFile = filePath + "ªµ¦-.xml";
-            else if (new File(filePath + "ìsô«.xml").exists())
-                behaviorsFile = filePath + "ìsô«.xml";
-            else if (new File(filePath + "two.xml").exists())
-                behaviorsFile = filePath + "two.xml";
-            else if (new File(filePath + "2.xml").exists())
-                behaviorsFile = filePath + "2.xml";
-
-            filePath = baseDir + "/img/" + imageSet + "/conf/";
-            if (new File(filePath + "behaviors.xml").exists())
-                behaviorsFile = filePath + "behaviors.xml";
-            else if (new File(filePath + "behavior.xml").exists())
-                behaviorsFile = filePath + "behavior.xml";
-            else if (new File(filePath + "行動.xml").exists())
-                behaviorsFile = filePath + "行動.xml";
-            else if (new File(filePath + "ÞíîÕïò.xml").exists())
-                behaviorsFile = filePath + "ÞíîÕïò.xml";
-            else if (new File(filePath + "ªµ¦-.xml").exists())
-                behaviorsFile = filePath + "ªµ¦-.xml";
-            else if (new File(filePath + "ìsô«.xml").exists())
-                behaviorsFile = filePath + "ìsô«.xml";
-            else if (new File(filePath + "two.xml").exists())
-                behaviorsFile = filePath + "two.xml";
-            else if (new File(filePath + "2.xml").exists())
-                behaviorsFile = filePath + "2.xml";
 
             log.log(Level.INFO, imageSet + " Read Behavior File ({0})", behaviorsFile);
 
@@ -598,16 +527,7 @@ public class Main {
 
             configuration.load(new Entry(behaviors.getDocumentElement()), imageSet);
 
-            filePath = baseDir + "/conf/";
             String infoFile = filePath + "info.xml";
-
-            filePath = baseDir + "/conf/" + imageSet + "/";
-            if (new File(filePath + "info.xml").exists())
-                infoFile = filePath + "info.xml";
-
-            filePath = baseDir + "/img/" + imageSet + "/conf/";
-            if (new File(filePath + "info.xml").exists())
-                infoFile = filePath + "info.xml";
 
             if (new File(infoFile).exists()) {
                 log.log(Level.INFO, imageSet + " Read Information File ({0})", infoFile);
@@ -670,26 +590,75 @@ public class Main {
         String normalizedPath = iconPath.startsWith("/") ? iconPath.substring(1) : iconPath;
         normalizedPath = normalizedPath.replace('/', File.separatorChar);
         
+        BufferedImage rawImage = null;
+        
         // 尝试从外部文件加载（用于MSI安装版本）
         String externalPath = "./img/" + normalizedPath;  // 相对于工作目录的 img 文件夹
         File externalFile = new File(externalPath);
         
         if (externalFile.exists()) {
             try (InputStream is = new FileInputStream(externalFile)) {
-                return ImageIO.read(is);
+                rawImage = ImageIO.read(is);
+                log.log(Level.INFO, "Successfully loaded external icon from: " + externalPath);
+            } catch (IOException e) {
+                log.log(Level.WARNING, "Failed to load external icon from: " + externalPath, e);
             }
         }
         
-        // 如果外部文件不存在，尝试从classpath加载（用于JAR内嵌资源）
-        InputStream resourceStream = Main.class.getResourceAsStream(iconPath);
-        if (resourceStream != null) {
-            try (InputStream is = resourceStream) {
-                return ImageIO.read(is);
+        // 如果外部文件不存在或加载失败，尝试从classpath加载（用于JAR内嵌资源）
+        if (rawImage == null) {
+            InputStream resourceStream = Main.class.getResourceAsStream(iconPath);
+            if (resourceStream != null) {
+                try (InputStream is = resourceStream) {
+                    rawImage = ImageIO.read(is);
+                    log.log(Level.INFO, "Successfully loaded resource icon from: " + iconPath);
+                } catch (IOException e) {
+                    log.log(Level.WARNING, "Failed to load resource icon from: " + iconPath, e);
+                }
+            } else {
+                log.log(Level.WARNING, "Resource not found: " + iconPath);
             }
+        }
+        
+        // 如果成功加载了图像，进行系统托盘优化处理
+        if (rawImage != null) {
+            return optimizeIconForTray(rawImage);
         }
         
         // 如果都失败了，返回null（让调用者处理）
         return null;
+    }
+    
+    /**
+     * 优化图标用于系统托盘显示
+     * 确保图标尺寸合适并且在各种系统上显示正常
+     */
+    private static BufferedImage optimizeIconForTray(BufferedImage original) {
+        if (original == null) return null;
+        
+        // 获取系统托盘的推荐尺寸
+        Dimension traySize = SystemTray.getSystemTray().getTrayIconSize();
+        int targetSize = Math.max(traySize.width, traySize.height);
+        
+        // 如果尺寸已经合适，直接返回
+        if (original.getWidth() == targetSize && original.getHeight() == targetSize) {
+            return original;
+        }
+        
+        // 创建优化后的图像
+        BufferedImage optimized = new BufferedImage(targetSize, targetSize, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = optimized.createGraphics();
+        
+        // 设置高质量渲染提示
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        // 绘制缩放后的图像
+        g2d.drawImage(original, 0, 0, targetSize, targetSize, null);
+        g2d.dispose();
+        
+        return optimized;
     }
 
     /**
@@ -739,14 +708,30 @@ public class Main {
         // get the tray icon image
         BufferedImage image = null;
         try {
-            image = loadIconImage("/icon.png");
+            image = loadIconImage("/icon.ico");
+            if (image != null) {
+                log.log(Level.INFO, "Successfully loaded ICO tray icon");
+            }
         } catch (final Exception e) {
-            log.log(Level.SEVERE, "Failed to create tray icon", e);
-            Main.showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n"
-                    + languageBundle.getString("SeeLogForDetails"));
-        } finally {
-            if (image == null)
-                image = new BufferedImage(16, 16, BufferedImage.TYPE_INT_RGB);
+            log.log(Level.WARNING, "Failed to load ICO, trying PNG fallback", e);
+        }
+
+        // 尝试PNG后备方案
+        if (image == null) {
+            try {
+                image = loadIconImage("/icon.png");
+                if (image != null) {
+                    log.log(Level.INFO, "Successfully loaded PNG tray icon");
+                }
+            } catch (final Exception e) {
+                log.log(Level.WARNING, "Failed to load PNG fallback", e);
+            }
+        }
+
+        // 最后的fallback：创建一个简单的默认图标
+        if (image == null) {
+            log.log(Level.WARNING, "Creating default tray icon");
+            image = createDefaultTrayIcon();
         }
 
         try {
@@ -971,6 +956,13 @@ public class Main {
                                 NativeFactory.getInstance().getEnvironment().refreshCache();
                         });
 
+                        // Animation Editor button
+                        final JButton btnAnimationEditor = new JButton(languageBundle.getString("AnimationEditor"));
+                        btnAnimationEditor.addActionListener(event1 -> {
+                            form.dispose();
+                            AnimationEditor.launch();
+                        });
+
                         final JButton btnLanguage = new JButton(languageBundle.getString("Language"));
                         btnLanguage.addMouseListener(new MouseListener() {
                             @Override
@@ -1106,6 +1098,8 @@ public class Main {
                         gridBag.gridy++;
                         panel.add(btnSettings, gridBag);
                         gridBag.gridy++;
+                        panel.add(btnAnimationEditor, gridBag);
+                        gridBag.gridy++;
                         panel.add(btnLanguage, gridBag);
                         gridBag.gridy++;
                         panel.add(btnAutoStart, gridBag);
@@ -1126,7 +1120,7 @@ public class Main {
                         // 自动调整窗口大小和位置
                         setupTrayMenuAutoSizing(form, panel, scaling, icon, event,
                             btnCallShimeji, btnFollowCursor, btnReduceToOne, btnRestoreWindows,
-                            btnAllowedBehaviours, btnChooseShimeji, btnSettings, btnLanguage,
+                            btnAllowedBehaviours, btnChooseShimeji, btnSettings, btnAnimationEditor, btnLanguage,
                             btnAutoStart, btnLicense, btnPauseAll, btnDismissAll);
                         form.setMinimumSize(form.getSize());
                     } else if (event.getButton() == MouseEvent.BUTTON1) {
@@ -1182,6 +1176,35 @@ public class Main {
                     + languageBundle.getString("SeeLogForDetails"));
             exit();
         }
+    }
+
+    /**
+     * 创建默认的托盘图标
+     * 当ICO和PNG都无法加载时使用
+     */
+    private static BufferedImage createDefaultTrayIcon() {
+        int size = 16;
+        try {
+            Dimension traySize = SystemTray.getSystemTray().getTrayIconSize();
+            size = Math.max(traySize.width, traySize.height);
+        } catch (Exception e) {
+            // 使用默认大小
+        }
+        
+        BufferedImage image = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+        
+        // 设置渲染提示
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        // 绘制一个简单的默认图标（蓝色圆圈）
+        g2d.setColor(java.awt.Color.BLUE);
+        g2d.fillOval(2, 2, size-4, size-4);
+        g2d.setColor(java.awt.Color.WHITE);
+        g2d.drawOval(2, 2, size-4, size-4);
+        
+        g2d.dispose();
+        return image;
     }
 
     /**
