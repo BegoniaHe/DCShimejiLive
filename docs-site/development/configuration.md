@@ -69,18 +69,45 @@ MenuDPI=96
 ```xml
 <ActionList>
     <Action Name="Stand" Type="Stay">
-        <Animation>
-            <Pose Image="stand.png" ImageAnchor="Bottom" Duration="1000"/>
+        <Animation Condition="true" IsTurn="false">
+            <Pose Image="stand.png" ImageRight="" ImageAnchor="12,34" Velocity="0,0" Duration="1000" Sound="" Volume="0"/>
+            <Hotspot Shape="Rectangle" Origin="10,10" Size="20,20" Behaviour="SitDown" />
         </Animation>
     </Action>
 </ActionList>
 ```
 
-### 图像锚点
+### `<Animation>` 属性
 
-- `Bottom` - 底部对齐（常用于地面站立）
-- `Center` - 居中对齐
-- `Top` - 顶部对齐
+| 属性 | 类型 | 默认值 | 描述 |
+| --- | --- | --- | --- |
+| `Condition` | 脚本 | `true` | 动画生效的条件表达式。 |
+| `IsTurn` | 布尔值 | `false` | 动画播放时是否需要根据吉祥物朝向（左/右）翻转图像。 |
+
+### `<Pose>` 属性
+
+`<Pose>` 标签定义了动画中的单帧。
+
+| 属性 | 类型 | 描述 |
+| --- | --- | --- |
+| `Image` | 字符串 | 左向图像的文件路径。 |
+| `ImageRight` | 字符串 | 右向图像的文件路径（可选）。如果未提供，将使用 `Image` 的水平翻转版本。 |
+| `ImageAnchor` | 坐标 (x,y) | 图像的锚点，决定了图像在窗口中的定位点。 |
+| `Velocity` | 坐标 (x,y) | 在此帧期间，吉祥物的水平和垂直位移。 |
+| `Duration` | 整数 | 此帧的持续时间（以动画间隔为单位，通常为 40 毫秒）。 |
+| `Sound` | 字符串 | 在此帧播放的音效文件路径。 |
+| `Volume` | 浮点数 | 音效的音量。 |
+
+### `<Hotspot>` 属性
+
+`<Hotspot>` 允许在吉祥物身上定义可交互区域。当用户点击这些区域时，可以触发特定的行为。
+
+| 属性 | 类型 | 描述 |
+| --- | --- | --- |
+| `Shape` | 枚举 | 热点区域的形状。支持 `Rectangle` (矩形) 和 `Ellipse` (椭圆)。 |
+| `Origin` | 坐标 (x,y) | 形状的左上角坐标。 |
+| `Size` | 尺寸 (宽,高) | 形状的宽度和高度。 |
+| `Behaviour` | 字符串 | 点击该热点时要切换到的行为名称。 |
 
 ## 语言配置
 
@@ -107,15 +134,25 @@ Settings=设置
 使用 JavaScript 语法的条件表达式：
 
 ```xml
-Condition="#{mascot.anchor.x} &lt; #{screen.width/2}"
+Condition="#{mascot.anchor.x} < #{screen.width/2}"
 ```
 
 ### 环境变量
-
-- `#{screen.width}` - 屏幕宽度
-- `#{screen.height}` - 屏幕高度
-- `#{mascot.anchor.x}` - 角色 X 坐标
-- `#{mascot.anchor.y}` - 角色 Y 坐标
+脚本引擎提供了多个环境变量，可用于条件表达式中以创建动态行为。这些变量使用 `#{variableName}` 语法进行访问。
+- **屏幕相关变量**:
+    - `#{screen.width}`: 虚拟屏幕的总宽度，可能跨越多个显示器。
+    - `#{screen.height}`: 虚拟屏幕的总高度。
+    - `#{screen.left}`, `#{screen.top}`, `#{screen.right}`, `#{screen.bottom}`: 主屏幕的边界。
+    - `#{workArea.width}`, `#{workArea.height}`: 可用桌面区域的尺寸，不包括任务栏。
+    - `#{workArea.left}`, `#{workArea.top}`, `#{workArea.right}`, `#{workArea.bottom}`: 工作区的边界。
+- **吉祥物相关变量**:
+    - `#{mascot.anchor.x}`: 角色当前的 X 坐标。
+    - `#{mascot.anchor.y}`: 角色当前的 Y 坐标。
+    - `#{mascot.lookRight}`: 一个布尔值 (`true` 或 `false`)，指示角色是否朝右。
+- **示例**: 创建一个仅当吉祥物位于工作区左半部分时才为 `true` 的条件，您可以使用：
+  ```xml
+  Condition="#{mascot.anchor.x} < #{workArea.left} + #{workArea.width} / 2"
+  ```
 
 ## 调试配置
 
