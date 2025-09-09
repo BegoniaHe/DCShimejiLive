@@ -1978,7 +1978,7 @@ public class SettingsWindow extends javax.swing.JDialog {
                 pnlAbout.add(rigid2);
 
                 lblVersion.setFont(lblVersion.getFont().deriveFont(lblVersion.getFont().getSize() + 4f));
-                lblVersion.setText("2.0.0");
+                lblVersion.setText("2.0.1");
                 lblVersion.setAlignmentX(0.5F);
                 pnlAbout.add(lblVersion);
                 pnlAbout.add(rigid3);
