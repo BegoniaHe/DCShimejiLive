@@ -39,6 +39,8 @@ import com.group_finity.mascot.exception.ConfigurationException;
 import com.group_finity.mascot.image.ImagePairs;
 import com.group_finity.mascot.imagesetchooser.ImageSetChooser;
 import com.group_finity.mascot.animationeditor.AnimationEditor;
+import com.group_finity.mascot.packagemanager.ui.PackageInstallDialog;
+import com.group_finity.mascot.packagemanager.ui.PackageCreatorDialog;
 import com.group_finity.mascot.license.LicenseManager;
 import com.group_finity.mascot.license.LicenseChecker;
 import com.group_finity.mascot.license.LicenseLevel;
@@ -976,6 +978,19 @@ public class Main {
                             AnimationEditor.launch();
                         });
 
+                        // Package Management buttons
+                        final JButton btnInstallPackage = new JButton(languageBundle.getString("InstallPackage"));
+                        btnInstallPackage.addActionListener(e -> {
+                            form.dispose();
+                            PackageInstallDialog.showInstallDialog(frame);
+                        });
+
+                        final JButton btnCreatePackage = new JButton(languageBundle.getString("CreatePackage"));
+                        btnCreatePackage.addActionListener(e -> {
+                            form.dispose();
+                            PackageCreatorDialog.showCreatorDialog(frame);
+                        });
+
                         final JButton btnLanguage = new JButton(languageBundle.getString("Language"));
                         btnLanguage.addMouseListener(new MouseListener() {
                             @Override
@@ -1113,6 +1128,10 @@ public class Main {
                         gridBag.gridy++;
                         panel.add(btnAnimationEditor, gridBag);
                         gridBag.gridy++;
+                        panel.add(btnInstallPackage, gridBag);
+                        gridBag.gridy++;
+                        panel.add(btnCreatePackage, gridBag);
+                        gridBag.gridy++;
                         panel.add(btnLanguage, gridBag);
                         gridBag.gridy++;
                         panel.add(btnAutoStart, gridBag);
@@ -1133,7 +1152,8 @@ public class Main {
                         // 自动调整窗口大小和位置
                         setupTrayMenuAutoSizing(form, panel, scaling, icon, event,
                             btnCallShimeji, btnFollowCursor, btnReduceToOne, btnRestoreWindows,
-                            btnAllowedBehaviours, btnChooseShimeji, btnSettings, btnAnimationEditor, btnLanguage,
+                            btnAllowedBehaviours, btnChooseShimeji, btnSettings, btnAnimationEditor, 
+                            btnInstallPackage, btnCreatePackage, btnLanguage,
                             btnAutoStart, btnLicense, btnPauseAll, btnDismissAll);
                         form.setMinimumSize(form.getSize());
                     } else if (event.getButton() == MouseEvent.BUTTON1) {
