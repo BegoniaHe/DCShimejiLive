@@ -956,9 +956,22 @@ public class Main {
                                 NativeFactory.getInstance().getEnvironment().refreshCache();
                         });
 
-                        // Animation Editor button
+                        // Animation Editor button - Special license required
                         final JButton btnAnimationEditor = new JButton(languageBundle.getString("AnimationEditor"));
+                        
+                        // Update button text based on license status
+                        LicenseLevel currentLevel = LicenseManager.getInstance().getCurrentLicenseLevel();
+                        if (currentLevel != LicenseLevel.SPECIAL_KEY) {
+                            btnAnimationEditor.setText(languageBundle.getString("AnimationEditor") + " (" + languageBundle.getString("SpecialLicenseRequired") + ")");
+                            btnAnimationEditor.setEnabled(false);
+                        }
+                        
                         btnAnimationEditor.addActionListener(event1 -> {
+                            // Check special license permission
+                            if (!LicenseChecker.checkSpecialFeature(true)) {
+                                return; // Permission denied, dialog already shown
+                            }
+                            
                             form.dispose();
                             AnimationEditor.launch();
                         });
