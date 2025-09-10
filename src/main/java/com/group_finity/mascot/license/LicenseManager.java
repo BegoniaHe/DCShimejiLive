@@ -83,7 +83,7 @@ public class LicenseManager {
             this.activationTime = LocalDateTime.now();
             saveLicenseToFile(keyString, keyData.getLevel());
             
-            logger.info("License key validated successfully: " + keyData.toString());
+            logger.info("License key validated successfully: " + keyData);
             return true;
             
         } catch (Exception e) {
@@ -237,7 +237,7 @@ public class LicenseManager {
                 if (keyData != null && !keyData.isExpired()) {
                     this.currentLicenseKey = keyData;
                     this.activationTime = LocalDateTime.parse(activationTimeStr, DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                    logger.info("License loaded from file: " + keyData.toString());
+                    logger.info("License loaded from file: " + keyData);
                 } else {
                     // 密钥无效或已过期，删除文件
                     Files.deleteIfExists(licenseFilePath);

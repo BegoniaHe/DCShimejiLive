@@ -1,6 +1,7 @@
 package com.group_finity.mascot.packagemanager;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 import java.util.logging.Logger;
@@ -78,7 +79,7 @@ public class LocalizationMergeManager {
                       StandardCopyOption.REPLACE_EXISTING);
             
             try (FileInputStream fis = new FileInputStream(targetFile);
-                 InputStreamReader reader = new InputStreamReader(fis, "UTF-8")) {
+                 InputStreamReader reader = new InputStreamReader(fis, StandardCharsets.UTF_8)) {
                 existingProperties.load(reader);
             }
         }
@@ -116,7 +117,7 @@ public class LocalizationMergeManager {
         
         // 写入合并后的文件
         try (FileOutputStream fos = new FileOutputStream(targetFile);
-             OutputStreamWriter writer = new OutputStreamWriter(fos, "UTF-8")) {
+             OutputStreamWriter writer = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
             existingProperties.store(writer, 
                 String.format("Merged localization for mascot: %s at %s", 
                              mascotName, new Date()));
@@ -190,7 +191,7 @@ public class LocalizationMergeManager {
         
         // 读取现有文件
         try (FileInputStream fis = new FileInputStream(langFile);
-             InputStreamReader reader = new InputStreamReader(fis, "UTF-8")) {
+             InputStreamReader reader = new InputStreamReader(fis, StandardCharsets.UTF_8)) {
             props.load(reader);
         }
         
@@ -221,7 +222,7 @@ public class LocalizationMergeManager {
         
         // 写回文件
         try (FileOutputStream fos = new FileOutputStream(langFile);
-             OutputStreamWriter writer = new OutputStreamWriter(fos, "UTF-8")) {
+             OutputStreamWriter writer = new OutputStreamWriter(fos, StandardCharsets.UTF_8)) {
             props.store(writer, "Removed entries for mascot: " + mascotName);
         }
     }

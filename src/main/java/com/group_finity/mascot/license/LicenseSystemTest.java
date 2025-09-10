@@ -46,16 +46,16 @@ public class LicenseSystemTest {
                     @Override
                     protected Object handleGetObject(String key) {
                         // Provide basic English fallbacks for license system
-                        switch (key) {
-                            case "LicenseActivation": return "License Activation";
-                            case "CurrentLicense": return "Current License Status";
-                            case "EnterLicenseKey": return "Enter License Key";
-                            case "ActivateLicense": return "Activate License";
-                            case "DeactivateLicense": return "Deactivate";
-                            case "Clear": return "Clear";
-                            case "Close": return "Close";
-                            default: return key; // Return the key itself as fallback
-                        }
+                        return switch (key) {
+                            case "LicenseActivation" -> "License Activation";
+                            case "CurrentLicense" -> "Current License Status";
+                            case "EnterLicenseKey" -> "Enter License Key";
+                            case "ActivateLicense" -> "Activate License";
+                            case "DeactivateLicense" -> "Deactivate";
+                            case "Clear" -> "Clear";
+                            case "Close" -> "Close";
+                            default -> key; // Return the key itself as fallback
+                        };
                     }
                     @Override
                     public java.util.Enumeration<String> getKeys() {
@@ -128,12 +128,14 @@ public class LicenseSystemTest {
         infoPanel.setBorder(BorderFactory.createTitledBorder("Instructions"));
         
         JTextArea infoText = new JTextArea(
-            "1. Click 'Generate Test Keys' to create sample license keys\n" +
-            "2. Copy a key and use 'Activate License' to test activation\n" +
-            "3. Try 'Test Advanced Feature' and 'Test Special Feature' to see access control\n" +
-            "4. Use 'Show Status Info' to view detailed license information\n" +
-            "5. Special keys unlock the internal key generator\n\n" +
-            "Note: This is a demonstration of the license system functionality."
+                """
+                        1. Click 'Generate Test Keys' to create sample license keys
+                        2. Copy a key and use 'Activate License' to test activation
+                        3. Try 'Test Advanced Feature' and 'Test Special Feature' to see access control
+                        4. Use 'Show Status Info' to view detailed license information
+                        5. Special keys unlock the internal key generator
+                        
+                        Note: This is a demonstration of the license system functionality."""
         );
         infoText.setEditable(false);
         infoText.setOpaque(false);

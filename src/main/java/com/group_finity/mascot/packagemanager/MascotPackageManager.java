@@ -1,6 +1,7 @@
 package com.group_finity.mascot.packagemanager;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.zip.*;
 import java.util.logging.Logger;
@@ -227,10 +228,12 @@ public class MascotPackageManager {
             
             int confirm = JOptionPane.showConfirmDialog(null,
                 String.format(
-                    "确定要卸载桌宠 '%s' 吗？\n" +
-                    "这将删除所有相关文件并移除对应的本地化条目。\n\n" +
-                    "Are you sure you want to uninstall mascot '%s'?\n" +
-                    "This will delete all related files and remove corresponding localization entries.",
+                        """
+                                确定要卸载桌宠 '%s' 吗？
+                                这将删除所有相关文件并移除对应的本地化条目。
+                                
+                                Are you sure you want to uninstall mascot '%s'?
+                                This will delete all related files and remove corresponding localization entries.""",
                     mascotName, mascotName
                 ),
                 "确认卸载 / Confirm Uninstall",
@@ -348,7 +351,7 @@ public class MascotPackageManager {
         
         ZipEntry entry = new ZipEntry(MANIFEST_FILE);
         zos.putNextEntry(entry);
-        zos.write(manifestJson.getBytes("UTF-8"));
+        zos.write(manifestJson.getBytes(StandardCharsets.UTF_8));
         zos.closeEntry();
     }
     
@@ -363,7 +366,7 @@ public class MascotPackageManager {
         }
         
         try (InputStream is = zipFile.getInputStream(manifestEntry);
-             InputStreamReader reader = new InputStreamReader(is, "UTF-8")) {
+             InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
             
             StringBuilder jsonBuilder = new StringBuilder();
             char[] buffer = new char[1024];
@@ -491,7 +494,7 @@ public class MascotPackageManager {
                 
                 Properties props = new Properties();
                 try (InputStream is = zipFile.getInputStream(entry);
-                     InputStreamReader reader = new InputStreamReader(is, "UTF-8")) {
+                     InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
                     props.load(reader);
                 }
                 
@@ -628,21 +631,19 @@ public class MascotPackageManager {
      * Convert package data to JSON string
      */
     private static String packageToJson(MascotPackage packageData) {
-        StringBuilder json = new StringBuilder();
-        json.append("{\n");
-        json.append("  \"name\": \"").append(escapeJson(packageData.getName())).append("\",\n");
-        json.append("  \"version\": \"").append(escapeJson(packageData.getVersion())).append("\",\n");
-        json.append("  \"author\": \"").append(escapeJson(packageData.getAuthor())).append("\",\n");
-        json.append("  \"description\": \"").append(escapeJson(packageData.getDescription())).append("\",\n");
-        json.append("  \"createTime\": \"").append(packageData.getCreateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)).append("\",\n");
-        json.append("  \"previewImage\": \"").append(escapeJson(packageData.getPreviewImage())).append("\",\n");
-        json.append("  \"imageFiles\": ").append(listToJson(packageData.getImageFiles())).append(",\n");
-        json.append("  \"soundFiles\": ").append(listToJson(packageData.getSoundFiles())).append(",\n");
-        json.append("  \"languageFiles\": ").append(listToJson(packageData.getLanguageFiles())).append(",\n");
-        json.append("  \"supportedLanguages\": ").append(listToJson(packageData.getSupportedLanguages())).append(",\n");
-        json.append("  \"signed\": ").append(packageData.isSigned()).append("\n");
-        json.append("}");
-        return json.toString();
+        return "{\n" +
+                "  \"name\": \"" + escapeJson(packageData.getName()) + "\",\n" +
+                "  \"version\": \"" + escapeJson(packageData.getVersion()) + "\",\n" +
+                "  \"author\": \"" + escapeJson(packageData.getAuthor()) + "\",\n" +
+                "  \"description\": \"" + escapeJson(packageData.getDescription()) + "\",\n" +
+                "  \"createTime\": \"" + packageData.getCreateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + "\",\n" +
+                "  \"previewImage\": \"" + escapeJson(packageData.getPreviewImage()) + "\",\n" +
+                "  \"imageFiles\": " + listToJson(packageData.getImageFiles()) + ",\n" +
+                "  \"soundFiles\": " + listToJson(packageData.getSoundFiles()) + ",\n" +
+                "  \"languageFiles\": " + listToJson(packageData.getLanguageFiles()) + ",\n" +
+                "  \"supportedLanguages\": " + listToJson(packageData.getSupportedLanguages()) + ",\n" +
+                "  \"signed\": " + packageData.isSigned() + "\n" +
+                "}";
     }
     
     /**
@@ -672,7 +673,7 @@ public class MascotPackageManager {
         packageData.setSoundFiles(extractJsonStringList(json, "soundFiles"));
         packageData.setLanguageFiles(extractJsonStringList(json, "languageFiles"));
         packageData.setSupportedLanguages(extractJsonStringList(json, "supportedLanguages"));
-        packageData.setSigned(extractJsonBoolean(json, "signed"));
+        packageData.setSigned(extractJsonBoolean(json));
         
         return packageData;
     }
@@ -732,7 +733,7 @@ public class MascotPackageManager {
      * Extract string list from JSON
      */
     private static List<String> extractJsonStringList(String json, String key) {
-        String pattern = "\"" + key + "\"\\s*:\\s*\\[(.*?)\\]";
+        String pattern = "\"" + key + "\"\\s*:\\s*\\[(.*?)]";
         Pattern p = Pattern.compile(pattern, Pattern.DOTALL);
         java.util.regex.Matcher m = p.matcher(json);
         
@@ -762,8 +763,8 @@ public class MascotPackageManager {
      * 从JSON中提取布尔值
      * Extract boolean value from JSON
      */
-    private static boolean extractJsonBoolean(String json, String key) {
-        String pattern = "\"" + key + "\"\\s*:\\s*(true|false)";
+    private static boolean extractJsonBoolean(String json) {
+        String pattern = "\"" + "signed" + "\"\\s*:\\s*(true|false)";
         Pattern p = Pattern.compile(pattern);
         Matcher m = p.matcher(json);
         if (m.find()) {

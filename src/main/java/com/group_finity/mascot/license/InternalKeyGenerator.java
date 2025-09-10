@@ -156,12 +156,12 @@ public class InternalKeyGenerator {
                 resultArea.append("\nGenerating Advanced Key...\n");
                 
                 // 在后台线程中生成密钥
-                SwingWorker<String, Void> worker = new SwingWorker<String, Void>() {
+                SwingWorker<String, Void> worker = new SwingWorker<>() {
                     @Override
                     protected String doInBackground() throws Exception {
                         return generateAdvancedKey(validityDays);
                     }
-                    
+
                     @Override
                     protected void done() {
                         try {
@@ -173,7 +173,7 @@ public class InternalKeyGenerator {
                             resultArea.append("1. Copy the key above\n");
                             resultArea.append("2. Share with authorized users\n");
                             resultArea.append("3. Users can activate via License menu\n\n");
-                            
+
                         } catch (Exception ex) {
                             logger.log(Level.SEVERE, "Failed to generate key", ex);
                             resultArea.append("ERROR: Failed to generate key\n");
