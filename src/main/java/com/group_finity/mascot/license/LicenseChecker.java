@@ -81,33 +81,29 @@ public class LicenseChecker {
         String currentStatus = manager.getLicenseStatusInfo();
         
         String message;
-        String title;
-        
-        switch (requiredLevel) {
-            case ADVANCED_KEY:
+        String title = switch (requiredLevel) {
+            case ADVANCED_KEY -> {
                 message = "This feature requires an Advanced or Special license.\n\n" +
-                         "Current Status: " + currentStatus + "\n\n" +
-                         "Please activate a valid license to access this feature.\n" +
-                         "You can purchase a license from our website or contact support.";
-                title = "Advanced License Required";
-                break;
-                
-            case SPECIAL_KEY:
+                        "Current Status: " + currentStatus + "\n\n" +
+                        "Please activate a valid license to access this feature.\n" +
+                        "You can purchase a license from our website or contact support.";
+                yield "Advanced License Required";
+            }
+            case SPECIAL_KEY -> {
                 message = "This feature requires a Special license.\n\n" +
-                         "Current Status: " + currentStatus + "\n\n" +
-                         "Please activate a Special license to access this feature.\n" +
-                         "Special licenses are available for developers and premium users.";
-                title = "Special License Required";
-                break;
-                
-            default:
+                        "Current Status: " + currentStatus + "\n\n" +
+                        "Please activate a Special license to access this feature.\n" +
+                        "Special licenses are available for developers and premium users.";
+                yield "Special License Required";
+            }
+            default -> {
                 message = "This feature requires a higher license level.\n\n" +
-                         "Current Status: " + currentStatus + "\n\n" +
-                         "Please upgrade your license to access this feature.";
-                title = "License Upgrade Required";
-                break;
-        }
-        
+                        "Current Status: " + currentStatus + "\n\n" +
+                        "Please upgrade your license to access this feature.";
+                yield "License Upgrade Required";
+            }
+        };
+
         JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
     }
     
@@ -149,9 +145,10 @@ public class LicenseChecker {
             
             if (daysRemaining <= 0) {
                 JOptionPane.showMessageDialog(null,
-                    "Your license has expired!\n\n" +
-                    "The software will continue to work with limited functionality.\n" +
-                    "Please renew your license to restore full features.",
+                        """
+                                Your license has expired!
+                                The software will continue to work with limited functionality.
+                                Please renew your license to restore full features.""",
                     "License Expired",
                     JOptionPane.WARNING_MESSAGE);
             } else if (daysRemaining <= 3) {

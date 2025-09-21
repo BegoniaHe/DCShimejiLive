@@ -216,7 +216,7 @@ public class AnimationPreviewPanel extends JPanel {
             currentPoseIndex + 1, poses.size()));
         
         // Update progress bar
-        int progress = poses.size() > 0 ? (currentPoseIndex * 100 / poses.size()) : 0;
+        int progress = !poses.isEmpty() ? (currentPoseIndex * 100 / poses.size()) : 0;
         progressBar.setValue(progress);
         progressBar.setString(progress + "%");
     }    private void loadAndDisplayImage(AnimationPose pose) {

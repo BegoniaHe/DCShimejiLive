@@ -19,15 +19,18 @@ public class LicenseFeatureDemo {
         }
         
         JOptionPane.showMessageDialog(parent,
-            "🎉 Advanced Feature Unlocked!\n\n" +
-            "This is an example of an advanced feature that requires\n" +
-            "an Advanced or Special license to access.\n\n" +
-            "Advanced features might include:\n" +
-            "• Custom mascot behaviors\n" +
-            "• Enhanced animations\n" +
-            "• Advanced settings\n" +
-            "• Export/Import configurations\n" +
-            "• And much more!",
+                """
+                        🎉 Advanced Feature Unlocked!
+                        
+                        This is an example of an advanced feature that requires
+                        an Advanced or Special license to access.
+                        
+                        Advanced features might include:
+                        • Custom mascot behaviors
+                        • Enhanced animations
+                        • Advanced settings
+                        • Export/Import configurations
+                        • And much more!""",
             "Advanced Feature Demo",
             JOptionPane.INFORMATION_MESSAGE);
             
@@ -57,14 +60,17 @@ public class LicenseFeatureDemo {
         contentPanel.add(titleLabel, gbc);
         
         JTextArea textArea = new JTextArea(
-            "Congratulations! You have access to special features!\n\n" +
-            "Special license features include:\n" +
-            "• All Advanced features\n" +
-            "• Developer tools and debugging\n" +
-            "• Internal key generation capabilities\n" +
-            "• Beta feature access\n" +
-            "• Priority support\n\n" +
-            "You can now generate new Advanced keys for distribution!"
+                """
+                        Congratulations! You have access to special features!
+                        
+                        Special license features include:
+                        • All Advanced features
+                        • Developer tools and debugging
+                        • Internal key generation capabilities
+                        • Beta feature access
+                        • Priority support
+                        
+                        You can now generate new Advanced keys for distribution!"""
         );
         textArea.setEditable(false);
         textArea.setOpaque(false);

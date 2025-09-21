@@ -416,18 +416,18 @@ jobs:
           
           #### Windows (x86 & x64 支持)
           - **Shimeji-ee.msi** - Windows MSI installer with embedded JRE / Windows MSI 安装程序，含嵌入式 JRE
-          - **Shimeji-ee_2.0.0_Windows_Portable.zip** - Windows portable version with embedded JRE / Windows 便携版，含嵌入式 JRE
+          - **Shimeji-ee_2.0.1_Windows_Portable.zip** - Windows portable version with embedded JRE / Windows 便携版，含嵌入式 JRE
           
           #### macOS
           - **Shimeji-ee-amd64.dmg** - macOS Intel (x64) DMG installer with embedded JRE / macOS Intel (x64) DMG 安装程序，含嵌入式 JRE
-          - **Shimeji-ee_2.0.0_macOS_Portable-amd64.zip** - macOS Intel (x64) portable version / macOS Intel (x64) 便携版
+          - **Shimeji-ee_2.0.1_macOS_Portable-amd64.zip** - macOS Intel (x64) portable version / macOS Intel (x64) 便携版
           - **Shimeji-ee-arm64.dmg** - macOS Apple Silicon (ARM64) DMG installer with embedded JRE / macOS Apple Silicon (ARM64) DMG 安装程序，含嵌入式 JRE
-          - **Shimeji-ee_2.0.0_macOS_Portable-arm64.zip** - macOS Apple Silicon (ARM64) portable version / macOS Apple Silicon (ARM64) 便携版
+          - **Shimeji-ee_2.0.1_macOS_Portable-arm64.zip** - macOS Apple Silicon (ARM64) portable version / macOS Apple Silicon (ARM64) 便携版
           
           #### Linux (新增支持!)
-          - **shimeji-ee_2.0.0_amd64.deb** - Linux DEB package with embedded JRE (Ubuntu, Debian) / Linux DEB 安装包，含嵌入式 JRE (Ubuntu, Debian)
-          - **shimeji-ee-2.0.0-1.x86_64.rpm** - Linux RPM package with embedded JRE (Fedora, CentOS, openSUSE) / Linux RPM 安装包，含嵌入式 JRE (Fedora, CentOS, openSUSE)
-          - **Shimeji-ee_2.0.0_Linux_Portable.zip** - Linux portable version with embedded JRE / Linux 便携版，含嵌入式 JRE
+          - **shimeji-ee_2.0.1_amd64.deb** - Linux DEB package with embedded JRE (Ubuntu, Debian) / Linux DEB 安装包，含嵌入式 JRE (Ubuntu, Debian)
+          - **shimeji-ee-2.0.1-1.x86_64.rpm** - Linux RPM package with embedded JRE (Fedora, CentOS, openSUSE) / Linux RPM 安装包，含嵌入式 JRE (Fedora, CentOS, openSUSE)
+          - **Shimeji-ee_2.0.1_Linux_Portable.zip** - Linux portable version with embedded JRE / Linux 便携版，含嵌入式 JRE
           
           ## Installation / 安装说明:
           
@@ -448,13 +448,13 @@ jobs:
           ### Linux (新增支持!)
           1. **DEB Package / DEB 安装包** (Ubuntu, Debian):
              ```bash
-             sudo dpkg -i shimeji-ee_2.0.0_amd64.deb
+             sudo dpkg -i shimeji-ee_2.0.1_amd64.deb
              sudo apt-get install -f  # 解决可能的依赖问题
              ```
           2. **RPM Package / RPM 安装包** (Fedora, CentOS, openSUSE):
              ```bash
-             sudo rpm -i shimeji-ee-2.0.0-1.x86_64.rpm
-             # 或者使用 dnf/yum: sudo dnf install shimeji-ee-2.0.0-1.x86_64.rpm
+             sudo rpm -i shimeji-ee-2.0.1-1.x86_64.rpm
+             # 或者使用 dnf/yum: sudo dnf install shimeji-ee-2.0.1-1.x86_64.rpm
              ```
           3. **Portable Version / 便携版**: Extract the portable zip and run the shimeji-ee executable
              解压便携版 zip 并运行 shimeji-ee 可执行文件

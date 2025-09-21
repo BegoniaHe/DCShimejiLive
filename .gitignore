@@ -49,3 +49,8 @@ Thumbs.db
 
 # maven
 .mvn/
+
+# docs-site
+docs-site/.vitepress/dist
+docs-site/.vitepress/cache
+docs-site/node_modules
