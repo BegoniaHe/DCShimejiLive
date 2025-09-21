@@ -134,7 +134,6 @@ elif [ "$PLATFORM" == "linux" ]; then
     # Linux specific Java options
     PLATFORM_JAVA_OPTIONS=(
         "--java-options" "-Duser.dir=\$APPDIR"
-        "--runtime-image" "$JAVA_HOME"
     )
 
     # 1. Create Portable Version
