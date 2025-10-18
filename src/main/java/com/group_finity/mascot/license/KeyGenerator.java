@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.Scanner;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -34,9 +35,7 @@ public class KeyGenerator {
         System.out.println("WARNING: This tool should only be used by authorized personnel!");
         System.out.println();
         
-        Scanner scanner = new Scanner(System.in);
-        
-        try {
+        try (Scanner scanner = new Scanner(System.in)) {
             while (true) {
                 System.out.println("Select an option:");
                 System.out.println("1. Generate Advanced Key");
@@ -48,29 +47,20 @@ public class KeyGenerator {
                 String choice = scanner.nextLine().trim();
                 
                 switch (choice) {
-                    case "1":
-                        generateAdvancedKey(scanner);
-                        break;
-                    case "2":
-                        generateSpecialKey(scanner);
-                        break;
-                    case "3":
-                        generateKeyPair();
-                        break;
-                    case "4":
+                    case "1" -> generateAdvancedKey(scanner);
+                    case "2" -> generateSpecialKey(scanner);
+                    case "3" -> generateKeyPair();
+                    case "4" -> {
                         System.out.println("Goodbye!");
                         return;
-                    default:
-                        System.out.println("Invalid choice. Please try again.");
+                    }
+                    default -> System.out.println("Invalid choice. Please try again.");
                 }
                 
                 System.out.println();
             }
         } catch (Exception e) {
-            logger.severe("Error in key generation: " + e.getMessage());
-            e.printStackTrace();
-        } finally {
-            scanner.close();
+            logger.log(Level.SEVERE, "Error in key generation: {0}", e.getMessage());
         }
     }
     
