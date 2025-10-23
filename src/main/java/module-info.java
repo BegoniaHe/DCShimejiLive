@@ -1,10 +1,10 @@
 module com.group_finity.mascot {
     requires transitive java.desktop;
+    requires transitive java.logging;
     requires java.management;
-    requires java.logging;
     requires java.scripting;
-    requires com.sun.jna;
-    requires com.sun.jna.platform;
+    requires transitive com.sun.jna;
+    requires transitive com.sun.jna.platform;
     requires AbsoluteLayout.RELEASE270;
     requires org.mozilla.rhino;
     requires com.formdev.flatlaf;

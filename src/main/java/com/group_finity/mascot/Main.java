@@ -106,11 +106,11 @@ public class Main {
             String osName = System.getProperty("os.name");
             String osVersion = System.getProperty("os.version");
             String osArch = System.getProperty("os.arch");
-            System.out.println("当前操作系统: " + osName + " " + osVersion + " " + osArch);
+            log.log(Level.INFO, "当前操作系统: {0} {1} {2}", new Object[]{osName, osVersion, osArch});
 
             // 获取 Java 版本信息
             String javaVersion = System.getProperty("java.version");
-            System.out.println("当前 Java 版本: " + javaVersion);
+            log.log(Level.INFO, "当前 Java 版本: {0}", javaVersion);
 
             // Force enable D3D hardware acceleration pipeline to improve 2D rendering performance on Windows
             System.setProperty("sun.java2d.d3d", "true");
@@ -131,13 +131,13 @@ public class Main {
             // Java 17+ 额外设置
             System.setProperty("sun.java2d.renderer", "sun.java2d.pipe.hw.AccelGraphicsConfig");
 
-            System.out.println(" Java 9+ DPI 兼容模式已启用");
-            System.out.println("  - DPI 感知: 已禁用");
-            System.out.println("  - UI 缩放: 已固定为 1.0");
-            System.out.println("  - 兼容模式: Java 8 行为");
+            log.info("Java 9+ DPI 兼容模式已启用");
+            log.info("  - DPI 感知: 已禁用");
+            log.info("  - UI 缩放: 已固定为 1.0");
+            log.info("  - 兼容模式: Java 8 行为");
         } catch (Exception e) {
-            System.out.println(" 启用 Java 9+ DPI 兼容模式失败: " + e.getMessage());
-            System.out.println("  - 请确保您使用的是 Oracle 或 OpenJDK 的 Java 9 或更高版本");
+            log.log(Level.WARNING, "启用 Java 9+ DPI 兼容模式失败: {0}", e.getMessage());
+            log.warning("  - 请确保您使用的是 Oracle 或 OpenJDK 的 Java 9 或更高版本");
         }
         try {
             LogManager.getLogManager().readConfiguration(Main.class.getResourceAsStream("/logging.properties"));
@@ -1191,18 +1191,18 @@ public class Main {
                 
                 // Show a notification that tray is not available but app is running
                 if (isWaylandEnvironment()) {
-                    System.out.println("注意：在Wayland环境下，系统托盘功能不可用。");
-                    System.out.println("您仍然可以通过右键点击桌宠来访问菜单功能。");
+                    log.info("注意：在Wayland环境下，系统托盘功能不可用。");
+                    log.info("您仍然可以通过右键点击桌宠来访问菜单功能。");
                 } else {
-                    System.out.println("注意：系统托盘功能在当前环境下不可用。");
+                    log.info("注意：系统托盘功能在当前环境下不可用。");
                 }
             }
         } catch (final UnsupportedOperationException e) {
             // This specifically catches Wayland UnsupportedOperationException
             log.log(Level.WARNING, "System tray not supported in Wayland environment", e);
             this.trayIcon = null;
-            System.out.println("注意：在Wayland环境下，系统托盘功能不可用。");
-            System.out.println("您仍然可以通过右键点击桌宠来访问菜单功能。");
+            log.info("注意：在Wayland环境下，系统托盘功能不可用。");
+            log.info("您仍然可以通过右键点击桌宠来访问菜单功能。");
         } catch (final AWTException e) {
             log.log(Level.SEVERE, "Failed to create tray icon", e);
             Main.showError(languageBundle.getString("FailedDisplaySystemTrayErrorMessage") + "\n"
